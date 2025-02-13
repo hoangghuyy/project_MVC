@@ -22,7 +22,7 @@
 						<input class="form-control me-2" type="search" name="Keyword" placeholder="Search" aria-label="Search">
 						<button class="btn btn-outline-dark" id="btnSearch" type="submit">Search</button>
 					</form>
-				</div> 
+				</div>
 				<div class="card-body px-0">
 					<div class="bd-example container" id="loadGridView">
 					</div>
@@ -48,6 +48,20 @@
 		}).fail(function () {
 			$('#loadGridView').html("Tải dữ liệu thất bại...");
 		});
+
+		$('#searchFrm').submit(function () {
+			let val = $('input[name="Keyword"]').val()
+			$.post(urlListItem + "?Keyword=" + val, function (data) {
+				$('#loadGridView').html(data);
+				setTimeout(
+					function () {
+						paging();
+					}, 300);
+			}).fail(function () {
+				$('#loadGridView').html("Tải dữ liệu thất bại...");
+			});
+			return false;
+		})
 	})
-	searchItem();
+	// searchItem();
 </script>

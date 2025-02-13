@@ -56,15 +56,15 @@ function replaceUrlParam(url, paramName, paramValue) {
 } //replace giá trị param
 
 //bt-search
-function searchItem() {
-    const searchE = $("#btnSearch");
-    searchE.on("click", function () {
-        debugger
-        var form = $("#searchFrm");
-        window.location.href = '#' + getValueFormMutilSelect(form);
-        return false;
-    });
-}
+//function searchItem() {
+//    const searchE = $("#btnSearch");
+//    searchE.on("click", function () {
+//        debugger
+//        var form = $("#searchFrm");
+//        window.location.href = '#' + getValueFormMutilSelect(form);
+//        return false;
+//    });
+//}
 
 function getValueFormMutilSelect(form) {
     var arrParam = '';
