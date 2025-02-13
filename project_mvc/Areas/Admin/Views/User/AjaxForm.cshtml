@@ -1,0 +1,142 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.UserAdminViewModel;
+@{
+	Layout = null;
+}
+
+
+<div>
+	<div class="card">
+		<form id="form-action" class="card-header">
+			@if (ViewBag.Action == "Edit")
+			{
+				<input type="hidden" name="Id" value="@Model.Item.Id" />
+			}
+			<input type="hidden" name="Action" value="@ViewBag.Action" />
+			<div class="header-title">
+
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div>
+									<div class="row">
+										<div class="mb-3">
+											<label for="UserName" class="form-label">Tài khoản</label>
+											<input type="text" class="form-control" id="UserName" name="UserName"
+												   aria-describedby="" value="@Model.Item.UserName" @(ViewBag.Action == "Edit" ? "readonly" : "") />
+										</div>
+										<div class="mb-3">
+											<label for="Password" class="form-label">Mật khẩu</label>
+											<input type="password" class="form-control" id="Password" name="Password" @(ViewBag.Action == "Edit" ? "value=*******" : "") />
+										</div>
+										<div class="mb-3">
+											<label for="Name" class="form-label">Họ tên</label>
+											<input type="text" class="form-control" id="Name" name="Name"
+												   value="@Model.Item.Name">
+										</div>
+										<div class="mb-3">
+											<label for="RoleCode" class="form-label">Quyền</label>
+											<select name="RoleCode" id="RoleCode" class="form-select mb-3"
+													aria-label=".form-select example">
+												<option value="USER" @(Model.Item.RoleCode == "USER" ? "selected" : "")>
+													User
+												</option>
+												<option value="ADMIN" @(Model.Item.RoleCode == "ADMIN" ? "selected" : "")> Admin </ option >
+											</select>
+										</div>
+										<div class="mb-3">
+											<label for="DepartmentId" class="form-label">Phòng ban</label>
+											<select name="DepartmentId" id="DepartmentId" class="form-select mb-3" aria-label=".form-select example">
+												@foreach (var item in Model.ListDepartment)
+												{
+													<option value="@item.Id" @(item.Id == Model.Item.DepartmentId ? " selected" : "")>
+														@item.DepartmentName
+													</option>
+												}
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<nav class="d-flex justify-content-end">
+					<nav class="d-flex justify-content-between">
+						<div class="d-flex nav nav-tabs">
+							<button type="submit" class="btn btn-primary nav-link active"
+									style="margin-right:15px">
+								@ViewBag.ActionText
+							</button>
+							<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+						</div>
+					</nav>
+				</nav>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		handleAction();
+
+		var form = $("#form-action");
+
+		// Khởi tạo validate
+		form.validate({
+			rules: {
+				UserName: {
+					required: true
+				},
+				Password: {
+					required: true
+				},
+				Name: {
+					required: true
+				}
+			},
+			messages: {
+				UserName: {
+					required: "Tài khoản bắt buộc nhập."
+				},
+				Password: {
+					required: "Mật khẩu bắt buộc nhập."
+				},
+				Name: {
+					required: "Họ tên bắt buộc nhập."
+				}
+			}
+		});
+
+		$('#form-action').submit(function (e) {
+			e.preventDefault();
+
+			if (!form.valid()) {
+				return;
+			}
+
+			var formData = $(this).serialize();
+
+			$.ajax({
+				url: '/AdminCms/User/Action',
+				type: 'POST',
+				data: formData,
+				success: function (response) {
+					showMessage(response.message, "success");
+					$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+				},
+				error: function (xhr, status, error) {
+					showMessage(error.message, "error");
+				}
+			});
+
+			return false;
+		});
+	});
+
+
+
+</script>
+

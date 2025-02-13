@@ -1,0 +1,107 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.DepartmentViewModel;
+@{
+	Layout = null;
+}
+
+@if (Model.Item != null)
+{
+	<div>
+		<div class="card">
+			<form id="form-action" class="card-header">
+				@if (ViewBag.Action == "Edit")
+				{
+					<input type="hidden" name="Id" value="@Model.Item.Id" />
+				}
+				<input type="hidden" name="Action" value="@ViewBag.Action" />
+				<div class="header-title">
+					<nav class="d-flex justify-content-end">
+						<nav class="d-flex justify-content-between">
+							<div class="d-flex nav nav-tabs">
+								<button type="submit" class="btn btn-primary nav-link active"
+										style="margin-right:15px">
+									@ViewBag.ActionText
+								</button>
+								<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+							</div>
+						</nav>
+					</nav>
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+							<div class="card-body">
+								<div class="new-user-info">
+									<div>
+										<div class="row d-flex">
+											<div class="mb-3">
+												<label for="UserName" class="form-label">Tên phòng ban</label>
+												<input type="text" class="form-control" id="DepartmentName" name="DepartmentName"
+													   aria-describedby="" value="@Model.Item.DepartmentName" />
+											</div>
+											<div class="mb-3">
+												<label class="col-3" for="add1">Thứ tự</label>
+												<input type="number" class="form-control" name="OrderDisplay" placeholder="Link url">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function () {
+			handleAction();
+
+			var form = $("#form-action");
+
+			// Khởi tạo validate
+			form.validate({
+				rules: {
+					DepartmentName: {
+						required: true
+					},
+				},
+				messages: {
+					DepartmentName: {
+						required: "Tên phòng ban bắt buộc nhập."
+					},
+				}
+			});
+
+			$('#form-action').submit(function (e) {
+				e.preventDefault();
+
+				if (!form.valid()) {
+					return;
+				}
+
+				var formData = $(this).serialize();
+
+				$.ajax({
+					url: '/AdminCms/Department/Action',
+					type: 'POST',
+					data: formData,
+					success: function (response) {
+						showMessage(response.message, "success");
+						$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+					},
+					error: function (xhr, status, error) {
+						showMessage(error.message, "error");
+					}
+				});
+
+				return false;
+			});
+		});
+
+
+
+	</script>
+}
+
+
+
+

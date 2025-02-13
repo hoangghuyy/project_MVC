@@ -1,0 +1,56 @@
+﻿.error {
+    color: red;
+    font-size: 13px;
+}
+
+.pagi {
+    text-align: center;
+}
+
+    .pagi ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .pagi ul li {
+            display: inline-block;
+            margin-right: 3px;
+        }
+
+            .pagi ul li:last-child {
+                margin-right: 0;
+            }
+
+            .pagi ul li a {
+                cursor: pointer;
+                display: block;
+                color: #312c2c;
+                height: 30px;
+                width: 30px;
+                border: 1px solid #b4b4b4;
+                line-height: 28px;
+                transition: all 350ms;
+                -moz-transition: all 350ms;
+                -webkit-transition: all 350ms;
+            }
+
+            .pagi .active a,
+            .pagi ul li:hover a {
+                border: 1px solid #3c8dbc;
+                background: #3c8dbc;
+                color: #ffffff;
+            }
+
+.pagi {
+    margin: 0;
+}
+
+/*.content-body {
+    padding: 15px;
+}*/
+
+.title-module {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
