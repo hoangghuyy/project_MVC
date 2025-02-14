@@ -53,7 +53,24 @@ namespace project_mvc.Services.Admin
 
         }
 
-        [Obsolete]
+		[Obsolete]
+		public async Task<UserAdmins?> GetByUserName(string user)
+		{
+			try
+			{
+				using SqlConnection connect = DapperDA.GetOpenConnection();
+				var result = await connect.QueryAsync<UserAdmins>("SELECT * FROM UserAdmins WHERE IsDeleted = 0 AND UserName=@user", new { user });
+				await connect.CloseAsync();
+				return result?.FirstOrDefault();
+			}
+			catch
+			{
+				return null;
+			}
+
+		}
+
+		[Obsolete]
         public async Task<bool> CheckUser(string user)
         {
             try
