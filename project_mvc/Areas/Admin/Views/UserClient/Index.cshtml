@@ -1,0 +1,53 @@
+﻿@using project_mvc.Helpers
+@{
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "User Account";
+}
+
+<div class="conatiner-fluid content-inner mt-5 py-0">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-header d-flex justify-content-between" style="padding-bottom: 20px; border-bottom: solid">
+					<div class="bd-example">
+						<button type="button" class="btn btn-light btn-sm">List</button>
+						<button type="button" class="btn btn-primary btn-sm btn-add">Add new</button>
+					</div>
+					<div class="bd-example">
+						<h4 class="card-title">@ViewBag.Title</h4>
+					</div>
+				</div>
+
+				<div class="card-body px-0">
+					<div class="bd-example container" id="loadGridView">
+					</div>
+					<div class="bd-example table-responsive" id="AjaxForm">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	const urlForm = "/AdminCms/UserClient/AjaxForm";
+	// const urlEdit = "/AdminCms/UserClient/AjaxformEdit";
+	const urlAction = "/AdminCms/UserClient/Action";
+	const urlListItem = "/AdminCms/UserClient/ListItems";
+	$(() => {
+		$.post(urlListItem, function (data) {
+			$('#loadGridView').html(data);
+			setTimeout(
+				function () {
+					paging();
+				}, 300);
+		}).fail(function () {
+			$('#loadGridView').html("Tải dữ liệu thất bại...");
+		});
+		$('.btn-add').on("click", function () {
+			loadAjaxForm(urlForm, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
+
+	})
+</script>

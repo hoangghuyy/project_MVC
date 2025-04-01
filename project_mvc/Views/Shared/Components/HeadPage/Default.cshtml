@@ -68,7 +68,7 @@
 					<div class="account" style="position:relative">
 						<div class="icon-account">
 							<a href="#" title="Account" rel="nofollow" id="account-icon">
-								<img style="margin-left: 0.5rem" width="40" height="40" src="~/html/style/assests/images/icons8-account-32.png" alt="shopping-cart" />
+								<img style="margin-left: 1rem" width="40" height="40" src="~/html/style/assests/images/icons8-account-32.png" alt="shopping-cart" />
 							</a>
 						</div>
 						<div class="text-account">
@@ -100,14 +100,14 @@
 									<a href="#" id="forgot-password">Quên mật khẩu?</a>
 								</div>
 
-								<div class="social-login">
+								@* <div class="social-login">
 									<p>Hoặc đăng nhập bằng</p>
 									<div class="social-icons">
 										<a href="#" class="social-icon facebook">Facebook</a>
 										<a href="#" class="social-icon google">G+ Google+</a>
 										<a href="#" class="social-icon zalo">Zalo</a>
 									</div>
-								</div>
+								</div> *@
 
 								<div class="register-cta">
 									<p>Tạo tài khoản của bạn và tận hưởng trải nghiệm mua sắm mới.</p>
@@ -124,7 +124,7 @@
 								<form id="register-form">
 									<div class="form-group">
 										<label for="register-name">Họ tên</label>
-										<input type="text" id="register-name" placeholder="Nhập họ tên" required>
+										<input type="text" name="Name" id="register-name" placeholder="Nhập họ tên" required>
 									</div>
 
 									<div class="form-group">
@@ -142,6 +142,11 @@
 										<input type="password" id="register-password" placeholder="Nhập mật khẩu" required>
 									</div>
 
+									<div class="form-group">
+										<label for="register-password">Confirm Password</label>
+										<input type="password" id="register-password" placeholder="Nhập mật khẩu" required>
+									</div>
+
 									<button type="submit" class="btn-register">Tạo tài khoản</button>
 								</form>
 
@@ -149,14 +154,14 @@
 									<p>Khi bạn nhấn Đăng ký, bạn đã đồng ý thực hiện mọi giao dịch mua bán theo điều kiện sử dụng và chính sách của CTLuxhome</p>
 								</div>
 
-								<div class="social-login">
+								@* <div class="social-login">
 									<p>Hoặc đăng nhập bằng</p>
 									<div class="social-icons">
 										<a href="#" class="social-icon facebook">Facebook</a>
 										<a href="#" class="social-icon google">G+ Google+</a>
 										<a href="#" class="social-icon zalo">Zalo</a>
 									</div>
-								</div>
+								</div> *@
 
 								<div class="login-cta">
 									<button id="show-login" class="btn-login">Đăng nhập</button>
@@ -412,7 +417,6 @@
 
 	/* Account Section */
 	.account {
-		display: flex;
 		align-items: center;
 		cursor: pointer;
 		position: relative;
@@ -423,15 +427,11 @@
 	}
 
 	.text-account {
-		display: flex;
 		flex-direction: column;
 		margin-left: 8px;
 	}
 
-	#account-text, #welcome-text {
-		font-size: 14px;
-		color: #333;
-	}
+	
 
 	/* Popup Styles */
 	.account-popup {

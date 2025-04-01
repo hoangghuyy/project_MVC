@@ -8,14 +8,14 @@ using System.Buffers.Text;
 
 namespace project_mvc.Areas.Admin.Controllers
 {
-    public class UserController : BaseController
+    public class UserAdminController : BaseController
     {
         private readonly UserDa UserDa;
         private readonly BaseDa BaseDa;
         private readonly DepartmentDa DepartmentDa;
 
 
-		public UserController()
+		public UserAdminController()
         {
             UserDa = new UserDa(WebConfig.ConnectionString!);
             BaseDa = new BaseDa(WebConfig.ConnectionString!);
@@ -71,80 +71,6 @@ namespace project_mvc.Areas.Admin.Controllers
             return View(model);
         }
 
-        //public IActionResult AjaxFormAdd()
-        //{
-        //	return View();
-        //}
-
-        //[Obsolete]
-        //public async Task<IActionResult> AjaxFormEdit(int id)
-        //{
-        //	var item = await UserDa.GetId(id);
-        //	if (item == null) return BadRequest(msg);
-        //	UserAdmins obj = new()
-        //	{
-        //		Id = item.Id,
-        //		Name = item.Name,
-        //		UserName = item.UserName,
-        //	};
-
-        //	UserAdminViewModel model = new()
-        //	{
-        //		Item = obj
-        //	};
-        //	return View(model);
-        //}
-
-        //      [HttpPost]
-        //public async Task<IActionResult> ActionAdd()
-        //{
-        //	UserAdmins obj = new();
-        //	await TryUpdateModelAsync(obj);
-        //	obj.PasswordSalt = Utility.CreateSaltKey(8);
-        //	obj.Password = Utility.CreatePasswordHash(obj.Password!, obj.PasswordSalt);
-        //	var rs = await BaseDa.Insert(obj, "UserAdmins");
-        //	if (rs == 0)
-        //	{
-        //		msg.Message = "Thêm mới thất bại";
-        //		return BadRequest(msg);
-        //	}
-        //	msg.Message = "Thêm mới thành công";
-        //	msg.Errors = false;
-        //	return Ok(msg);
-        //}
-        //[Obsolete]
-        //[HttpPost]
-        //public async Task<IActionResult> ActionEdit()
-        //{
-        //	UserAdmins obj = new();
-        //	await TryUpdateModelAsync(obj);
-        //	var item = await UserDa.GetId(obj.Id);
-        //	if (item == null) return BadRequest(msg);
-        //	item.Name = obj.Name;
-        //	var rs = await BaseDa.Update(item, "UserAdmins");
-        //	if (rs == 0)
-        //	{
-        //		msg.Message = "Cập nhật thất bại";
-        //		return BadRequest(msg);
-        //	}
-        //	msg.Message = "Cập nhật thành công";
-        //	msg.Errors = false;
-        //	return Ok(msg);
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> ActionDelete(int id)
-        //{
-        //	var rs = await BaseDa.Delete(id, "UserAdmins");
-        //	if (rs == 0)
-        //	{
-        //		msg.Message = "Xóa thất bại";
-        //		return BadRequest(msg);
-        //	}
-        //	msg.Message = "Xóa thành công";
-        //	msg.Errors = false;
-        //	return Ok(msg);
-        //}
         [HttpPost]
         [Obsolete]
         public async Task<IActionResult> Action()
