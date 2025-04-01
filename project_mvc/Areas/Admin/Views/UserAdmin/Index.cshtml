@@ -1,7 +1,7 @@
 ﻿@using project_mvc.Helpers
 @{
 	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-	ViewBag.Title = "Tài Khoản";
+	ViewBag.Title = "Admin Account";
 }
 
 <div class="conatiner-fluid content-inner mt-5 py-0">
@@ -29,10 +29,10 @@
 	</div>
 </div>
 <script>
-	const urlForm = "/AdminCms/User/AjaxForm";
-	// const urlEdit = "/AdminCms/User/AjaxformEdit";
-	const urlAction = "/AdminCms/User/Action";
-	const urlListItem = "/AdminCms/User/ListItems";
+	const urlForm = "/AdminCms/UserAdmin/AjaxForm";
+	// const urlEdit = "/AdminCms/UserAdmin/AjaxformEdit";
+	const urlAction = "/AdminCms/UserAdmin/Action";
+	const urlListItem = "/AdminCms/UserAdmin/ListItems";
 	$(() => {
 		$.post(urlListItem, function (data) {
 			$('#loadGridView').html(data);

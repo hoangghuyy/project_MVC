@@ -1,5 +1,5 @@
 ﻿@using project_mvc.Helpers
-@model project_mvc.Areas.Admin.ViewModels.UserAdminViewModel;
+@model project_mvc.Areas.Admin.ViewModels.UserClientViewModel;
 @{
 	Layout = null;
 }
@@ -36,28 +36,6 @@
 											<input type="text" class="form-control" id="Name" name="Name"
 												   value="@Model.Item.Name">
 										</div>
-										<div class="mb-3">
-											<label for="RoleCode" class="form-label">Quyền</label>
-											<select name="RoleCode" id="RoleCode" class="form-select mb-3"
-													aria-label=".form-select example">
-												<option value="USER" @(Model.Item.RoleCode == "USER" ? "selected" : "")>
-													User
-												</option>
-												<option value="ADMIN" @(Model.Item.RoleCode == "ADMIN" ? "selected" : "")> Admin </ option >
-											</select>
-										</div>
-										<div class="mb-3">
-											<label for="DepartmentId" class="form-label">Phòng ban</label>
-											<select name="DepartmentId" id="DepartmentId" class="form-select mb-3" aria-label=".form-select example">
-												<option value="">-- Chọn --</option>
-												@foreach (var item in Model.ListDepartment!)
-												{
-													<option value="@item.Id" @(item.Id == Model.Item.DepartmentId ? " selected" : "")>
-														@item.Name
-													</option>
-												}
-											</select>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -71,7 +49,7 @@
 									style="margin-right:15px">
 								@ViewBag.ActionText
 							</button>
-							<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+							<div type="button" class="btn btn-outline-primary nav-link btn-back">Back</div>
 						</div>
 					</nav>
 				</nav>
@@ -112,7 +90,7 @@
 				}
 			}
 		});
-		
+
 
 		$('#form-action').submit(function (e) {
 			e.preventDefault();
@@ -124,7 +102,7 @@
 			var formData = $(this).serialize();
 
 			$.ajax({
-				url: '/AdminCms/User/Action',
+				url: '/AdminCms/UserClient/Action',
 				type: 'POST',
 				data: formData,
 				success: function (response) {
@@ -143,7 +121,7 @@
 			$('#loadGridView').show();
 			$('#AjaxForm').html('');
 		});
-	
+
 	});
 
 
