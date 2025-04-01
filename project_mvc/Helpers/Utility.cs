@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Globalization;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -175,6 +176,7 @@ namespace project_mvc.Helpers
             catch { }
             return unicode;
         }
+        public static string DisplayShowName(string? Name, bool show) => show == false ? "<del>" + Name + "</del>" : "<span>" + Name + "</span>";
         public static string RemoveHTML(string source) => string.IsNullOrEmpty(source) == false ? Regex.Replace(source, "<.*?>", "") : string.Empty;
         public static string CreateSaltKey(int size)
         {
@@ -217,6 +219,125 @@ namespace project_mvc.Helpers
 
 			}
 			return key;
+		}
+
+		public static List<string> StringToListString(string array)
+		{
+			List<string> lst = new();
+			try
+			{
+				if (!string.IsNullOrEmpty(array))
+				{
+					array = array.Trim(',');
+					lst = array.Split(',').ToList();
+				}
+			}
+			catch { }
+			return lst;
+		}
+
+        public static string TrimLength(string input, int maxLength)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                if (input.Length > maxLength)
+                {
+                    maxLength -= "...".Length;
+                    maxLength = input.Length < maxLength ? input.Length : maxLength;
+                    bool isLastSpace = input[maxLength] == ' ';
+                    string part = input.Substring(0, maxLength);
+                    if (isLastSpace)
+                        return part + "...";
+                    int lastSpaceIndexBeforeMax = part.LastIndexOf(' ');
+                    if (lastSpaceIndexBeforeMax == -1)
+                        return part + "...";
+                    return string.Concat(input.AsSpan(0, lastSpaceIndexBeforeMax), "...");
+                }
+            }
+            return input;
+        }
+
+		public static string GetFormatPriceType(decimal? value, Int16? type, string content, bool? showprice = true)
+		{
+			switch (type)
+			{
+				case 1:
+					if (value.HasValue)
+					{
+						if (value.Value == 0)
+							return content;
+						else if (showprice.HasValue && showprice == false)
+							return content;
+						else
+							return String.Format("{0:0,0}", value).Replace(".", ",") + "đ";
+					}
+					else
+						return content;
+				case 2:
+					return "$" + value;
+				case 3:
+					return value.HasValue ? value.Value == 0 ? content : string.Format("{0:0,0}", value).Replace(".", ",") : content;
+				case 4:
+					return value.HasValue
+						? value.Value switch
+						{
+							0 => content,
+							_ => showprice.HasValue && showprice == false ? content : String.Format("{0:0,0}", value).Replace(".", ","),
+						}
+						: content;
+				case 5:
+					if (value.HasValue)
+					{
+						if (value.Value == 0)
+							return "Miễn phí";
+						else if (showprice.HasValue && showprice == false)
+							return content;
+						else
+							return String.Format("{0:0,0}", value).Replace(".", ",") + "đ";
+					}
+					else
+						return content;
+				default: return string.Empty;
+			}
+		}
+
+		public static string Link(string moduleAscii, string nameAscii, string redirect)
+		{
+			if (!string.IsNullOrEmpty(redirect))
+			{
+				return redirect;
+			}
+			if (!string.IsNullOrEmpty(moduleAscii) && !string.IsNullOrEmpty(nameAscii))
+			{
+				return "/" + moduleAscii + "/" + nameAscii;
+			}
+			if (!string.IsNullOrEmpty(moduleAscii))
+			{
+				moduleAscii = moduleAscii.TrimEnd('/');
+			}
+			if (!string.IsNullOrEmpty(nameAscii))
+			{
+				nameAscii = nameAscii.TrimEnd('/');
+			}
+			if (!string.IsNullOrEmpty(nameAscii))
+			{
+				string moduleSub = nameAscii[..1];
+				if (moduleSub == "/")
+				{
+					return nameAscii;
+				}
+				return "/" + nameAscii;
+			}
+			if (!string.IsNullOrEmpty(moduleAscii))
+			{
+				string moduleSub = moduleAscii[..1];
+				if (moduleSub == "/")
+				{
+					return moduleAscii;
+				}
+				return "/" + moduleAscii;
+			}
+			return string.Empty;
 		}
 	}
 }

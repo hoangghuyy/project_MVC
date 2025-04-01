@@ -45,5 +45,11 @@
 	// })
 	$(() => {
 		initAjaxLoad(urlListItem, "#loadGridView");
+		$('.btn-add').on("click", function () {
+			loadAjaxForm(urlForm, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
 	})
+	
 </script>

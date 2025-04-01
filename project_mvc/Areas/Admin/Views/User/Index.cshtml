@@ -17,12 +17,7 @@
 						<h4 class="card-title">@ViewBag.Title</h4>
 					</div>
 				</div>
-				<div class="d-flex justify-content-between" style="padding:20px">
-					<form class="d-flex" id="searchFrm">
-						<input class="form-control me-2" type="search" name="Keyword" placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-dark" id="btnSearch" type="submit">Search</button>
-					</form>
-				</div> 
+				 
 				<div class="card-body px-0">
 					<div class="bd-example container" id="loadGridView">
 					</div>
@@ -48,6 +43,11 @@
 		}).fail(function () {
 			$('#loadGridView').html("Tải dữ liệu thất bại...");
 		});
+		$('.btn-add').on("click", function () {
+			loadAjaxForm(urlForm, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
+		
 	})
-	searchItem();
 </script>

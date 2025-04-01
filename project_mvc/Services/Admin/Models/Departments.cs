@@ -3,7 +3,7 @@
 	public class Departments
 	{
 		public int Id { get; set; }
-		public string? DepartmentName { get; set; }
+		public string? Name { get; set; }
 		public int? OrderDisplay { get; set; }
 		public bool IsDeleted { get; set; } = false;
 
@@ -12,7 +12,7 @@
 	{
 		public int TotalRecords { get; set; }
 		public int Id { get; set; }
-		public string? DepartmentName { get; set; }
+		public string? Name { get; set; }
 		public int? OrderDisplay { get; set; }
 
 	}

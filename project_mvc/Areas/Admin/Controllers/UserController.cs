@@ -38,7 +38,7 @@ namespace project_mvc.Areas.Admin.Controllers
             SearchModel search = new();
             await TryUpdateModelAsync(search);
 			search.Keyword = Utility.ValidString(search.Keyword!, "", true);
-			int pageSize = 1;
+			int pageSize = 2;
             UserAdminViewModel model = new()
             {
                 ListItems = await UserDa.ListSearch(search, search.Page, pageSize),
@@ -46,7 +46,10 @@ namespace project_mvc.Areas.Admin.Controllers
 			};
             int total = model.ListItems != null && model.ListItems.Count != 0 ? model.ListItems.FirstOrDefault()!.TotalRecords : 0;
             ViewBag.Pagging = GetPage(search.Page, total, pageSize);
-            return View(model);
+			ViewBag.Keyword = search.Keyword;
+			model.Total = total;
+			model.PageSize = pageSize;
+			return View(model);
         }
 
         [Obsolete]

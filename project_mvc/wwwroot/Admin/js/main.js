@@ -29,13 +29,25 @@ function showMessage(mess, status) {
         },
     }).showToast();
 }
-//phân trang
+//phân trangurlListItem
 function paging() {
-    $(".pagingData").each(function () {
-        var a = $(this).attr("href"),
-            e = a.replaceAll("#page=", "");
-        a = replaceUrlParam(window.location.href, "page", e), $(this).attr("href", a);
-    });
+    $('.pagingData').on('click', function (e) {
+        e.preventDefault();
+        let p = $(this).attr('href');
+        debugger
+
+        $.post(urlListItem + "?page=" + p, function (data) {
+            $('#loadGridView').html(data);
+            setTimeout(
+                function () {
+                    paging();
+                }, 300);
+        }).fail(function () {
+            $('#loadGridView').html("Tải dữ liệu thất bại...");
+        });
+    })
+
+
 }
 //replace giá trị param
 function replaceUrlParam(url, paramName, paramValue) {
@@ -55,140 +67,6 @@ function replaceUrlParam(url, paramName, paramValue) {
     );
 } //replace giá trị param
 
-//bt-search
-function searchItem() {
-    const searchE = $("#btnSearch");
-    searchE.on("click", function () {
-        debugger
-        var form = $("#searchFrm");
-        window.location.href = '#' + getValueFormMutilSelect(form);
-        return false;
-    });
-}
-
-function getValueFormMutilSelect(form) {
-    var arrParam = '';
-    var idMselect;
-    $(form).find("input[type='checkbox']:checked, input[type='radio']:checked, input[type='text'],input[type='number'], input[type='hidden'], select").each(function () {
-        idMselect = $(this).attr("name");
-        if ($(this).val() != '' && $(this).val() != '')
-            arrParam += "&" + idMselect + "=" + $(this).val();
-    });
-    if (arrParam != '')
-        arrParam = arrParam.substring(1);
-    return arrParam;
-}
-
-//AjaxForm 
-function handleAction() {
-    const addE = $('.btn-add');
-    const editE = $('.btn-edit');
-    const deleteE = $('.btn-delete');
-    const deleteAllE = $('.deleteAll');
-    const backE = $('.btn-back');
-    if (addE) {
-        addE.on("click", function () {
-            loadAjaxForm(urlForm, "#AjaxForm");
-            $('#loadGridView').html('');
-            //$('#AjaxForm').show();
-        });
-    }
-    if (editE) {
-        editE.on("click", function () {
-            const id = $(this).data("id");
-            loadAjaxForm(urlForm + "?id=" + id, "#AjaxForm");
-            $('#loadGridView').html('');
-            $('#AjaxForm').show();
-        });
-    }
-    if (backE) {
-        backE.on("click", function () {
-            loadAjaxForm(urlListItem, "#loadGridView");
-            //$('#loadGridView').show();
-            $('#AjaxForm').html('');
-        });
-    }
-    if (deleteE) {
-        deleteE.on("click", function () {
-            const id = $(this).data("id");
-
-            $.confirm({
-                content: 'Bạn có chắc muốn xóa không?',
-                buttons: {
-                    confirm: {
-                        text: 'Xóa',
-                        btnClass: 'btn-red',
-                        action: function () {
-                            $.ajax({
-                                url: urlAction,
-                                type: "POST",
-                                contentType: "application/x-www-form-urlencoded",
-                                data: { action: "Delete", Id: id },
-                                success: function (data) {
-                                    loadAjaxForm(urlListItem, "#loadGridView");
-                                    showMessage(data.message, "success");
-                                },
-                                error: function () {
-                                    showMessage(data.message, "error");
-                                }
-                            });
-                        }
-                    },
-                    cancel: {
-                        text: 'Hủy',
-                        action: function () { }
-                    }
-                }
-            });
-        });
-    }
-    if (deleteAllE) {
-        deleteAllE.on("click", function () {
-            //e.preventDefault();
-            var arrRowId = '';
-            $("input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
-                arrRowId += $(this).val() + ",";
-            });
-            arrRowId = (arrRowId.length > 0) ? arrRowId.substring(0, arrRowId.length - 1) : arrRowId;
-            if (arrRowId != "") {
-                $.confirm({
-                    title: false,
-                    content: 'Bạn có chắc muốn xóa các mục đã chọn không?',
-                    buttons: {
-                        confirm: {
-                            text: 'Xóa',
-                            btnClass: 'btn-red',
-                            action: function () {
-                                $.ajax({
-                                    url: urlAction,
-                                    type: "POST",
-                                    contentType: "application/x-www-form-urlencoded",
-                                    data: { action: "DeleteAll", ItemId: arrRowId }, // Gửi dữ liệu qua body
-                                    success: function (data) {
-                                        loadAjaxForm(urlListItem, "#loadGridView");
-                                        showMessage(data.message, "success");
-                                    },
-                                    error: function () {
-                                        showMessage("Xóa thất bại", "error");
-                                    }
-                                });
-                            }
-                        },
-                        cancel: {
-                            text: 'Hủy',
-                            action: function () { }
-                        }
-                    }
-                });
-            } else {
-                showMessage("Hãy chọn ít nhất 1 bài viết", "success");;
-            }
-
-            return false;
-        });
-    }
-}
-
 
 //load CKEditor start
 config = {};
@@ -198,7 +76,7 @@ function LoadCKEDITOR(n, o, h) {
 }
 
 function CKEditorConfig(instanceName, fullEditor, height) {
-    config.language = 'vi';
+    config.language = 'en';
     //config.extraPlugins = 'youtube';
     config.allowedContent = true;
     config.filebrowserBrowseUrl = '/lib/tinymce/index.html?integration=ckeditor&typeview=3';
@@ -354,6 +232,114 @@ function FileTinyMce(file, id, name) {
     $("#" + id).val(file.fullPath);
 }
 
+function AlbumTinyMce(file, id, name) {
+    var html = `<table class="table removeParent">`;
+    html += `<tr><td rowspan="2" style="width:50px;"><img class="tooltipImage" style="width: 50px; height: 50px;" src="[AlbumUrl]"><a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a></td><td style="width:100px;text-align:left;"><b>Tiêu đề</b></td><td><input class="form-control" type="text" name="AlbumTitle" placeholder="[AlbumTitle]" value=""></td></tr>`;
+    html += `<tr><td style="text-align:left;"><b>Link</b></td><td><input type="text" class="form-control" name="AlbumUrl" value="[AlbumUrl]"></td></tr>`;
+    html += `<tr><td><input type="text" style="text-align:center;width:70px;display: inline-block;" class="form-control" name="AlbumOrderDisplay" value="0" placeholder="Thứ tự"></td><td style="text-align:left;"><b>Loại</b></td><td>` +
+        `<select name="AlbumType" class="form-control" style="width:200px;display:inline-block;">` +
+        // `<option value="4">Slide thư viện</option>` +
+        `<option value="0">Ảnh/Background</option>` +
+        // `<option value="1">Icon/Ảnh nhỏ</option>` +
+        //`<option value="2">Icon trang chủ</option>` +
+        `<option value="3">Banner</option>` +
+        /*`<option value="4">Slide thư viện</option>` +*/
+        //`<option value="5">Banner ngoài danh mục cha</option>` +
+        //`<option value="6">Popup</option>` +
+        `</select>
+<input type="radio" class="IsAvatar" name="IsAvatar" value="true" style="margin:0 5px;" data-url="[AlbumUrl]" />Ảnh đại diện
+</td></tr></table>`;
+    html = html.replaceAll("[AlbumUrl]", file.fullPath);
+    html = html.replaceAll("[AlbumTitle]", file.fullPath);
+    $("#" + id).prepend(html);
+    removeObject();
+    $('.IsAvatar').change(function () {
+        var src = $(this).data('url');
+        $('#Avatar').val(src);
+        $('#AddAvatar').find('input').val(src);
+        $('#AddAvatar').find('img').attr('src', src);
+    });
+    tooltip();
+    //if (file.type == "image") {
+    //    var url = "/admincms/Image/ConvertReSize?path=" + file.path + "&name=" + file.name;
+    //    $.ajax({
+    //        url: encodeURI(url), cache: false, type: "Post",
+    //        success: function (data) {
+    //            console.log(data);
+    //        },
+    //        error: function (data) {
+    //            console.log(data);
+    //        }
+    //    });
+    //}
+}
+
+function AlbumModuleProductTinyMce(file, id, name) {
+    let html = `
+            <table class="table removeParent">
+                <tr>
+                    <td rowspan="3" style="width:50px;">
+                        <img style="width: 50px; height: 50px;" src="${file.fullPath}">
+                        <a href="javascript:void(0);" class="removeObject">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                    <td style="width:100px;text-align:left;"><span>Tiêu đề</span></td>
+                    <td><input class="form-control form-control-sm title" type="text" name="AlbumTitle" value=""></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left;"><span>Link redirect</span></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm link" name="AlbumAlt" value="">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left;"><span>Link ảnh</span></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm title" name="AlbumUrl" value="${file.fullPath}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="text" style="text-align:center;width:70px;display: inline-block;" class="form-control form-control-sm" name="AlbumOrderDisplay" value="0" placeholder="Thứ tự"></td>
+                    <td style="text-align:left;"><span>Loại</span></td>
+                    <td style="padding: 0 5px">
+                        <select name='AlbumType' class="form-control form-control-sm">
+                            <option value='0' @(item.AlbumType == 0 ? "selected" : "")>Ảnh/Background</option>
+                            <option value='3' @(item.AlbumType == 3 ? "selected" : "")>Banner @Temp.SizeImage("Banner")</option>
+                            <option value='4' @(item.AlbumType == 4 ? "selected" : "")>Banner nhỏ danh mục sản phẩm</option>
+                        </select>
+                        <input type="radio" class="IsAvatar" name="IsAvatar" value="true" style="margin:0 5px;" data-url="${file.fullPath}" />Ảnh đại diện
+                    </td>
+                </tr>
+            </table>
+    `;
+    $("#" + id).prepend(html);
+    removeObject();
+    $('.IsAvatar').change(function () {
+        var src = $(this).data('url');
+        $('#Avatar').val(src);
+        $('#AddAvatar').find('input').val(src);
+        $('#AddAvatar').find('img').attr('src', src);
+    });
+    tooltip();
+    //if (file.type == "image") {
+    //    var url = "/admincms/Image/ConvertReSize?path=" + file.path + "&name=" + file.name;
+    //    $.ajax({
+    //        url: encodeURI(url), cache: false, type: "Post",
+    //        success: function (data) {
+    //            console.log(data);
+    //        },
+    //        error: function (data) {
+    //            console.log(data);
+    //        }
+    //    });
+    //}
+}
+
 //checkbox
 function loadFunctionInit() {
     $("#checkAll").on("click", function () {
@@ -385,3 +371,51 @@ function loadFunctionInit() {
         }
     });
 }
+
+function replaceCommaFirstEnd(str) {
+    if (str) {
+        if (str.startsWith(",")) {
+            str = str.substring(1);
+        }
+        if (str.endsWith(",")) {
+            str = str.substring(0, str.length - 1);
+        }
+        return str;
+    }
+}
+
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function removeElement(array, elem) {
+    var index = array.indexOf(elem);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+}
+
+function RemoveUnicode(str) {
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'| |\"|\&|\#|\[|\]|~|$|_|\||–|”|“|`/g, "-");
+    str = str.replace(/-+-/g, "-"); //thay thế 2- thành 1- 
+    str = str.replace(/^\-+|\-+$/g, "");
+    return str;
+} // chuyển name tới NameAscii
+
+function removeAllAlbum(id) {
+    $('#' + id).find('.removeParent').remove();
+}//xóa album

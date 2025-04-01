@@ -1,0 +1,364 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.WebsiteModuleProductViewModel;
+
+
+
+@* <div class="w_searchgr form-inline">
+            <input type="text" class="form-control title" name="Keyword" id="Keyword" value="" placeholder="Tìm kiếm" style="width:calc(100% - 165px);">
+            <select id="Category" class="form-control" style="width: 161px">
+                <option value="">-- Chọn</option>
+                <option value="1"> đã chọn</option>
+                <option value="0"> chưa chọn</option>
+            </select>
+        </div>
+        <div class="badge badge-default" style="margin-bottom:10px;cursor:pointer;" id="RemoveAllM">Xóa đã chọn</div> *@
+<table id="tblGridAjax" class="table table-hover tblGridAjax ">
+	<thead>
+		<tr role="row">
+			<th>Tên</th>
+			<th class="text-center wd80">Trạng thái</th>
+			<th class="text-center wd50">
+				<div class="label-check">
+					<input type="checkbox" id="checkAll" class="minimal" value="">
+					<label for="checkAll"></label>
+				</div>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model.ListModuleProduct != null && Model.ListModuleProduct.Count > 0)
+		{
+			foreach (var item in Model.ListModuleProduct.Where(x => x.ParentId == 0))
+			{
+				<tr id="item_@(item.Id)">
+					<td class="open-child active" data-id="@item.Id" data-level="1">
+						<span class="lnr lnr-chevron-down" style="margin-right: 5px;">
+							<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M10.869 16.6308C10.811 16.5743 10.563 16.3609 10.359 16.1622C9.076 14.9971 6.976 11.9576 6.335 10.3668C6.232 10.1252 6.014 9.51437 6 9.18802C6 8.8753 6.072 8.5772 6.218 8.29274C6.422 7.93814 6.743 7.65368 7.122 7.49781C7.385 7.39747 8.172 7.2416 8.186 7.2416C9.047 7.08573 10.446 7 11.992 7C13.465 7 14.807 7.08573 15.681 7.21335C15.695 7.22796 16.673 7.38383 17.008 7.55431C17.62 7.86702 18 8.47784 18 9.13151V9.18802C17.985 9.61374 17.605 10.509 17.591 10.509C16.949 12.0141 14.952 14.9834 13.625 16.1768C13.625 16.1768 13.284 16.5129 13.071 16.659C12.765 16.887 12.386 17 12.007 17C11.584 17 11.19 16.8724 10.869 16.6308Z" fill="currentColor"></path>
+							</svg>
+						</span>
+						@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+						@if (Model.ListModuleProduct.Count(x => x.ParentId == item.Id) > 0)
+						{
+							<span class="badge bg-danger" style="margin-left:5px;">@Model.ListModuleProduct.Count(x => x.ParentId == item.Id)</span>
+						}
+					</td>
+					<td class="text-center">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+					<td class="text-center">
+						<input type="checkbox" id="Check@(item.Id)" data-type="product" data-title="@item.Name" class="minimal checkProduct" @(("," + Model.selectedValue + ",").Contains("," + item.Id + ",") ? "checked" : string.Empty) value="@item.Id">
+						<label for="Check@(item.Id)"></label>
+					</td>
+				</tr>
+				foreach (var child in Model.ListModuleProduct.Where(x => x.ParentId == item.Id).OrderBy(x => x.OrderDisplay))
+				{
+					<tr id="item_@(child.Id)" class="child-@item.Id level-1" data-id="@item.Id">
+						<td class="open-child active" data-id="@child.Id" data-level="2" style="padding-left: 50px">
+							<span class="lnr lnr-chevron-down" style="margin-right: 5px;">
+								<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M10.869 16.6308C10.811 16.5743 10.563 16.3609 10.359 16.1622C9.076 14.9971 6.976 11.9576 6.335 10.3668C6.232 10.1252 6.014 9.51437 6 9.18802C6 8.8753 6.072 8.5772 6.218 8.29274C6.422 7.93814 6.743 7.65368 7.122 7.49781C7.385 7.39747 8.172 7.2416 8.186 7.2416C9.047 7.08573 10.446 7 11.992 7C13.465 7 14.807 7.08573 15.681 7.21335C15.695 7.22796 16.673 7.38383 17.008 7.55431C17.62 7.86702 18 8.47784 18 9.13151V9.18802C17.985 9.61374 17.605 10.509 17.591 10.509C16.949 12.0141 14.952 14.9834 13.625 16.1768C13.625 16.1768 13.284 16.5129 13.071 16.659C12.765 16.887 12.386 17 12.007 17C11.584 17 11.19 16.8724 10.869 16.6308Z" fill="currentColor"></path>
+								</svg>
+							</span>
+							@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+							@if (Model.ListModuleProduct.Count(x => x.ParentId == child.Id) > 0)
+							{
+								<span class="badge bg-danger" style="margin-left:5px;">@Model.ListModuleProduct.Count(x => x.ParentId == child.Id)</span>
+							}
+						</td>
+						<td class="text-center">@Html.Raw(StaticEnum.Show(child.IsShow))</td>
+						<td class="text-center">
+							<input type="checkbox" id="Check@(child.Id)" data-type="product" data-title="@child.Name" class="minimal checkProduct" @(("," + Model.selectedValue + ",").Contains("," + child.Id + ",") ? "checked" : string.Empty) value="@child.Id">
+							<label for="Check@(child.Id)"></label>
+						</td>
+					</tr>
+					foreach (var child2 in Model.ListModuleProduct.Where(x => x.ParentId == child.Id).OrderBy(x => x.OrderDisplay))
+					{
+						<tr id="item_@(child2.Id)" class="child-@item.Id child-@child.Id level-2" data-id="@child.Id">
+							<td class="open-child active" data-id="@child2.Id" data-level="3" style="padding-left:100px">
+								<span class="lnr lnr-chevron-down" style="margin-right: 5px;">
+									<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M10.869 16.6308C10.811 16.5743 10.563 16.3609 10.359 16.1622C9.076 14.9971 6.976 11.9576 6.335 10.3668C6.232 10.1252 6.014 9.51437 6 9.18802C6 8.8753 6.072 8.5772 6.218 8.29274C6.422 7.93814 6.743 7.65368 7.122 7.49781C7.385 7.39747 8.172 7.2416 8.186 7.2416C9.047 7.08573 10.446 7 11.992 7C13.465 7 14.807 7.08573 15.681 7.21335C15.695 7.22796 16.673 7.38383 17.008 7.55431C17.62 7.86702 18 8.47784 18 9.13151V9.18802C17.985 9.61374 17.605 10.509 17.591 10.509C16.949 12.0141 14.952 14.9834 13.625 16.1768C13.625 16.1768 13.284 16.5129 13.071 16.659C12.765 16.887 12.386 17 12.007 17C11.584 17 11.19 16.8724 10.869 16.6308Z" fill="currentColor"></path>
+									</svg>
+								</span>@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+								@if (Model.ListModuleProduct.Count(x => x.ParentId == child2.Id) > 0)
+								{
+									<span class="badge bg-danger" style="margin-left:5px;">@Model.ListModuleProduct.Count(x => x.ParentId == child2.Id)</span>
+								}
+							</td>
+							<td class="text-center">@Html.Raw(StaticEnum.Show(child2.IsShow))</td>
+							<td class="text-center">
+								<input type="checkbox" id="Check@(child2.Id)" data-type="product" data-title="@child2.Name" class="minimal checkProduct" @(("," + Model.selectedValue + ",").Contains("," + child2.Id + ",") ? "checked" : string.Empty) value="@child2.Id">
+								<label for="Check@(child2.Id)"></label>
+							</td>
+						</tr>
+						foreach (var child3 in Model.ListModuleProduct.Where(x => x.ParentId == child2.Id).OrderBy(x => x.OrderDisplay))
+						{
+							<tr id="item_@(child3.Id)" class="child-@item.Id child-@child2.Id level-3" data-id="@child2.Id">
+								<td class="open-child active" data-id="@child3.Id" data-level="4" style="padding-left: 150px">
+									<span class="lnr lnr-chevron-down" style="margin-right: 5px;">
+										<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M10.869 16.6308C10.811 16.5743 10.563 16.3609 10.359 16.1622C9.076 14.9971 6.976 11.9576 6.335 10.3668C6.232 10.1252 6.014 9.51437 6 9.18802C6 8.8753 6.072 8.5772 6.218 8.29274C6.422 7.93814 6.743 7.65368 7.122 7.49781C7.385 7.39747 8.172 7.2416 8.186 7.2416C9.047 7.08573 10.446 7 11.992 7C13.465 7 14.807 7.08573 15.681 7.21335C15.695 7.22796 16.673 7.38383 17.008 7.55431C17.62 7.86702 18 8.47784 18 9.13151V9.18802C17.985 9.61374 17.605 10.509 17.591 10.509C16.949 12.0141 14.952 14.9834 13.625 16.1768C13.625 16.1768 13.284 16.5129 13.071 16.659C12.765 16.887 12.386 17 12.007 17C11.584 17 11.19 16.8724 10.869 16.6308Z" fill="currentColor"></path>
+										</svg>
+									</span>@Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+									@if (Model.ListModuleProduct.Count(x => x.ParentId == child3.Id) > 0)
+									{
+										<span class="badge bg-danger" style="margin-left:5px;">@Model.ListModuleProduct.Count(x => x.ParentId == child3.Id)</span>
+									}
+								</td>
+								<td class="text-center">@Html.Raw(StaticEnum.Show(child3.IsShow))</td>
+								<td class="text-center">
+									<input type="checkbox" id="Check@(child3.Id)" data-type="product" data-title="@child3.Name" class="minimal checkProduct" @(("," + Model.selectedValue + ",").Contains("," + child3.Id + ",") ? "checked" : string.Empty) value="@child3.Id">
+									<label for="Check@(child3.Id)"></label>
+								</td>
+							</tr>
+							foreach (var child4 in Model.ListModuleProduct.Where(x => x.ParentId == child3.Id).OrderBy(x => x.OrderDisplay))
+							{
+								<tr id="item_@(child4.Id)" class="child-@item.Id child-@child3.Id level-4" data-id="@child3.Id">
+									<td class="open-child open-child- active" data-id="@child4.Id" data-level="5" style="padding-left: 200px">
+										<span class="lnr lnr-chevron-down" style="margin-right: 5px;">
+											<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M10.869 16.6308C10.811 16.5743 10.563 16.3609 10.359 16.1622C9.076 14.9971 6.976 11.9576 6.335 10.3668C6.232 10.1252 6.014 9.51437 6 9.18802C6 8.8753 6.072 8.5772 6.218 8.29274C6.422 7.93814 6.743 7.65368 7.122 7.49781C7.385 7.39747 8.172 7.2416 8.186 7.2416C9.047 7.08573 10.446 7 11.992 7C13.465 7 14.807 7.08573 15.681 7.21335C15.695 7.22796 16.673 7.38383 17.008 7.55431C17.62 7.86702 18 8.47784 18 9.13151V9.18802C17.985 9.61374 17.605 10.509 17.591 10.509C16.949 12.0141 14.952 14.9834 13.625 16.1768C13.625 16.1768 13.284 16.5129 13.071 16.659C12.765 16.887 12.386 17 12.007 17C11.584 17 11.19 16.8724 10.869 16.6308Z" fill="currentColor"></path>
+											</svg>
+										</span>@Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+										@if (Model.ListModuleProduct.Count(x => x.ParentId == child4.Id) > 0)
+										{
+											<span class="badge bg-danger" style="margin-left:5px;">@Model.ListModuleProduct.Count(x => x.ParentId == child4.Id)</span>
+										}
+									</td>
+									<td class="text-center">@Html.Raw(StaticEnum.Show(child4.IsShow))</td>
+									<td class="text-center">
+										<input type="checkbox" id="Check@(child4.Id)" data-type="product" data-title="@child4.Name" class="minimal checkProduct" @(("," + Model.selectedValue + ",").Contains("," + child4.Id + ",") ? "checked" : string.Empty) value="@child4.Id">
+										<label for="Check@(child4.Id)"></label>
+									</td>
+								</tr>
+							}
+						}
+					}
+				}
+			}
+		}
+	</tbody>
+</table>
+
+<script>
+	$(document).ready(function () {
+		// Xử lý sự kiện khi click vào checkbox "Check All"
+		$("#checkAll").on("click", function () {
+			if ($(this).prop("checked")) {
+				$(".checkProduct").prop("checked", true);
+			} else {
+				$(".checkProduct").prop("checked", false);
+			}
+			// Cập nhật giá trị của input khi "Check All" được tích hoặc bỏ tích
+			updateInputValues();
+		});
+
+		// Xử lý sự kiện khi click vào các checkbox riêng lẻ
+		$(".checkProduct").on("click", function () {
+			let isCheck = $(this).prop("checked");
+			if (isCheck) {
+				if (!$("#checkAll").prop("checked")) {
+					$("#checkAll").prop("checked", true);
+				}
+			} else {
+				let ischeckAll = false;
+				$(".checkProduct").each(function () {
+					if (!ischeckAll && $(this).prop("checked")) {
+						ischeckAll = true;
+					}
+				});
+				if (ischeckAll) {
+					if (!$("#checkAll").prop("checked")) {
+						$("#checkAll").prop("checked", true);
+					}
+				} else {
+					$("#checkAll").prop("checked", false);
+				}
+			}
+			// Cập nhật giá trị của input khi checkbox riêng lẻ được tích hoặc bỏ tích
+			updateInputValues();
+		});
+
+		// Hàm cập nhật giá trị của input dựa trên các checkbox được chọn
+		function updateInputValues() {
+			// Xử lý cho input content
+			let contentValues = [];
+			$('.check[data-type="content"]').each(function () {
+				if ($(this).prop("checked")) {
+					contentValues.push($(this).val());
+				}
+			});
+			$("#Value_ModuleContentValues").val(contentValues.join(','));
+
+			// Xử lý cho input product
+			let productValues = [];
+			$('.checkProduct[data-type="product"]').each(function () {
+				if ($(this).prop("checked")) {
+					productValues.push($(this).val());
+				}
+			});
+			$("#Value_ModuleProductValues").val(productValues.join(','));
+		}
+
+		// Xóa các giá trị có sẵn trong input khi trang được tải
+		$('#Value_ModuleContentValues').val("");
+		$('#Value_ModuleProductValues').val("");
+	});
+
+	$(document).ready(function () {
+		// Xử lý sự kiện khi click vào checkbox
+		$('input[type="checkbox"].checkProduct').on('change', function () {
+			// Lấy giá trị id của checkbox
+			let id = $(this).val();
+			// Lấy loại (content hoặc product) từ data-type
+			let type = $(this).data('type');
+			// Xác định input tương ứng dựa trên loại
+			let inputId = type === 'content' ? '#Value_ModuleContentValues' : '#Value_ModuleProductValues';
+			// Lấy giá trị hiện tại của input
+			let currentValues = $(inputId).val();
+			// Chuyển giá trị hiện tại thành mảng, đảm bảo currentValues không phải là undefined
+			let valuesArray = currentValues && currentValues.trim() !== "" ? currentValues.split(',') : [];
+
+			if ($(this).is(':checked')) {
+				// Nếu checkbox được chọn, thêm id vào mảng (nếu chưa có)
+				if (!valuesArray.includes(id)) {
+					valuesArray.push(id);
+				}
+			} else {
+				// Nếu checkbox bỏ chọn, loại bỏ id khỏi mảng
+				valuesArray = valuesArray.filter(value => value !== id);
+			}
+
+			// Cập nhật giá trị của input
+			// Nếu mảng rỗng, gán giá trị là chuỗi rỗng
+			$(inputId).val(valuesArray.length > 0 ? valuesArray.join(',') : "");
+		});
+
+		// Xóa các giá trị có sẵn trong input khi trang được tải
+		$('#Value_ModuleContentValues').val("");
+		$('#Value_ModuleProductValues').val("");
+	});
+
+	$(function () {
+		$('.open-child .lnr-chevron-down').on('click', function () {
+			let parent = $(this).parents('.open-child')
+			let id = parent.data('id');
+			if (parent.hasClass('active')) {
+				$('.child-' + id).addClass('hide');
+				$('.child-' + id + '.open-child').removeClass('active');
+				parent.removeClass('active');
+			}
+			else {
+				let lvel = parent.data('level');
+				$('.child-' + id + '.level-' + lvel).removeClass('hide');
+				parent.addClass('active');
+			}
+
+		});
+	});
+</script>
+
+@* <script>
+            $(function () {
+                // // $('#Keyword').donetyping(function () {
+                // //     var url = '@Url.Action("AjaxGridSelect", "WebsiteModuleContent")?MutilFile=True&selectedValue=@Model.selectedValue;
+                // //     var k = $('#Keyword').val();
+                // //     url += '&keyword=' + k;
+                // //     var selected = $('#Value_ModuleValues').val();
+                // //     var isSelected = $('#Category').val();
+                // //     if (selected != null && selected != undefined && isSelected == "1") {
+                // //         url += '&selected=' + selected;
+                // //     }
+                // //     else if (selected != null && selected != undefined && isSelected == "0") {
+                // //         url += '&unselected=' + selected;
+                // //     }
+                // //     loadAjax(url, '#tblGridAjax')
+                // // });
+                // // $('#Category').change(function () {
+                // //     var url = '@Url.Action("AjaxGridSelect", "WebsiteModuleContent")?MutilFile=True&selectedValue=@Model.selectedValue;
+                // //     var k = $('#Keyword').val();
+                // //     url += '&keyword=' + k;
+                // //     var selected = $('#Value_ModuleValues').val();
+                // //     var isSelected = $(this).val();
+                // //     debugger
+                // //     if (selected != null && selected != undefined && isSelected == "1") {
+                // //         url += '&selected=' + selected;
+                // //     }
+                // //     else if (selected != null && selected != undefined && isSelected == "0") {
+                // //         url += '&unselected=' + selected;
+                // //     }
+                // //     loadAjax(url, '#tblGridAjax')
+                // // });
+                $('#ShowAllM').click(function () {
+                    $("#tblGridAjax tr[class^='child-']").removeClass('hide');
+                    $("#tblGridAjax tr td").addClass('active');
+                });
+                $('#HideAllM').click(function () {
+                    $("#tblGridAjax tr[class^='child-']").addClass('hide');
+                    $("#tblGridAjax tr td").removeClass('active');
+                });
+            });
+        </script> *@
+@* <script>
+	$(function () {
+		$('.open-child-').click(function () {
+			var id = $(this).data('id');
+			if ($(this).hasClass('active')) {
+				$('.child-' + id).addClass('hide');
+				$('.child-' + id + ' .open-child-').removeClass('active');
+				$(this).removeClass('active');
+			}
+			else {
+				var lvel = $(this).data('level');
+				$('.child-' + id + '.level-' + lvel).removeClass('hide');
+				$(this).addClass('active');
+			}
+		});
+	});
+</script> *@
+<style>
+	.lnr-chevron-down {
+		margin-right: 5px;
+	}
+
+	.tblGridAjax tr td {
+		font-weight: 600;
+	}
+
+	.tblGridAjax .level-1 td, .tblGridAjax .level-2 td, .tblGridAjax .level-3 td, .tblGridAjax .level-4 td {
+		font-weight: 400;
+	}
+
+	.tblGridAjax tr td.active .badge {
+		display: none;
+	}
+
+	.tblGridAjax tr.level-1 td:nth-child(1) {
+		padding-left: 22px;
+	}
+
+	.tblGridAjax tr.level-2 td:nth-child(1) {
+		padding-left: 41px;
+	}
+
+	.tblGridAjax tr.level-3 td:nth-child(1) {
+		padding-left: 60px;
+	}
+
+	.tblGridAjax tr.level-4 td:nth-child(1) {
+		padding-left: 70px;
+	}
+
+	.tblGridAjax tr td label {
+		cursor: pointer;
+		display: block;
+	}
+
+	.hide {
+		display: none;
+	}
+
+	.open-child {
+		cursor: pointer;
+	}
+</style>
+

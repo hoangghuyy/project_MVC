@@ -1,14 +1,16 @@
 ﻿@model project_mvc.Areas.Admin.ViewModels.DepartmentViewModel
 @{
 	Layout = null;
+	var keyword = ViewBag.Keyword as string;
+
 }
 @if (Model.ListItems != null && Model.ListItems.Any())
 {
 	<div class="table-responsive">
 		<div class="d-flex justify-content-between" style="padding:20px">
-			<form class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-dark" type="submit">Search</button>
+			<form class="d-flex" id="searchFrm">
+				<input class="form-control me-2" type="search" value="@keyword" name="Keyword" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-dark" id="btnSearch" type="submit">Search</button>
 			</form>
 		</div>
 		<table id="basic-table" class="table table-striped mb-0" role="grid">
@@ -47,7 +49,7 @@
 							@item.Id
 						</td>
 						<td>
-							@item.DepartmentName
+							@item.Name
 						</td>
 						<td>
 							<div class="flex align-items-center list-user-action">
@@ -129,7 +131,102 @@
 </style>
 <script>
 	$(() => {
-		handleAction();
+		$('.btn-delete').on("click", function (e) {
+			e.preventDefault();
+
+			const id = $(this).data("id");
+
+			$.confirm({
+				content: 'Bạn có chắc muốn xóa không?',
+				buttons: {
+					confirm: {
+						text: 'Xóa',
+						btnClass: 'btn-red',
+						action: function () {
+							$.ajax({
+								url: urlAction,
+								type: "POST",
+								contentType: "application/x-www-form-urlencoded",
+								data: { action: "Delete", Id: id },
+								success: function (data) {
+									loadAjaxForm(urlListItem, "#loadGridView");
+									showMessage(data.message, "success");
+								},
+								error: function () {
+									showMessage(data.message, "error");
+								}
+							});
+						}
+					},
+					cancel: {
+						text: 'Hủy',
+						action: function () { }
+					}
+				}
+			});
+		});
+		$('.deleteAll').on("click", function (e) {
+			e.preventDefault();
+			var arrRowId = '';
+			$("input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+				arrRowId += $(this).val() + ",";
+			});
+			arrRowId = (arrRowId.length > 0) ? arrRowId.substring(0, arrRowId.length - 1) : arrRowId;
+			if (arrRowId != "") {
+				$.confirm({
+					title: false,
+					content: 'Bạn có chắc muốn xóa các mục đã chọn không?',
+					buttons: {
+						confirm: {
+							text: 'Xóa',
+							btnClass: 'btn-red',
+							action: function () {
+								$.ajax({
+									url: urlAction,
+									type: "POST",
+									contentType: "application/x-www-form-urlencoded",
+									data: { action: "DeleteAll", ItemId: arrRowId }, //Gửi dữ liệu qua body
+									success: function (data) {
+										loadAjaxForm(urlListItem, "#loadGridView");
+										showMessage(data.message, "success");
+									},
+									error: function () {
+										showMessage("Xóa thất bại", "error");
+									}
+								});
+							}
+						},
+						cancel: {
+							text: 'Hủy',
+							action: function () { }
+						}
+					}
+				});
+			} else {
+				showMessage("Hãy chọn ít nhất 1 bài viết", "success");;
+			}
+
+			return false;
+		});
+		$('.btn-edit').on("click", function () {
+			const id = $(this).data("id");
+			loadAjaxForm(urlForm + "?id=" + id, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
+		loadFunctionInit();
+		$('#searchFrm').submit(function () {
+			let val = $('input[name="Keyword"]').val()
+			$.post(urlListItem + "?Keyword=" + val, function (data) {
+				$('#loadGridView').html(data);
+				setTimeout(
+					function () {
+						paging();
+					}, 300);
+			}).fail(function () {
+				$('#loadGridView').html("Tải dữ liệu thất bại...");
+			});
+			return false;
+		})
 	});
-	loadFunctionInit();
 </script>

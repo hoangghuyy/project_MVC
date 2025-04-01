@@ -42,6 +42,11 @@
 		}).fail(function () {
 			$('#loadGridView').html("Tải dữ liệu thất bại...");
 		});
+		$('.btn-add').on("click", function () {
+			loadAjaxForm(urlForm, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
 	})
 	// $(function () {
 	// 	initAjaxLoad(urlListItem, "#loadGridView");

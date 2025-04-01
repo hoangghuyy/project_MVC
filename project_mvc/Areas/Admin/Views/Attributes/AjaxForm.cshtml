@@ -1,0 +1,168 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.AttributesViewModel;
+@{
+	Layout = null;
+}
+
+
+<div>
+	<div class="card">
+		<form id="form-action" class="card-header">
+			@if (ViewBag.Action == "Edit")
+			{
+				<input type="hidden" name="Id" value="@Model.Item.Id" />
+			}
+			<input type="hidden" name="Action" value="@ViewBag.Action" />
+			<div class="header-title">
+
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div class="row">
+									<div>
+										<div class="mb-3">
+											<label for="UserName" class="form-label">Tên thuộc tính</label>
+											<input type="text" class="form-control" id="Name" name="Name"
+												   aria-describedby="" value="@Model.Item.Name" />
+										</div>
+										<div class="mb-3">
+											<label for="Password" class="form-label">Link</label>
+											<input type="password" class="form-control" id="NameAscii" name="NameAscii" value="@Model.Item.NameAscii">
+										</div>
+										<div class="d-flex">
+											<div class="col-md-6 d-flex" style="align-items:center; margin-right: 10px;">
+												<label for="ParentId" class="form-label col-3">Thuộc tính Cha</label>
+												<select name="ParentId" id="ParentId" class="form-select mb-3" aria-label=".form-select example">
+													<option value="0">
+														Chọn
+													</option>
+													@if (Model.ListItems != null && Model.ListItems.Any())
+													{
+														foreach (var item in Model.ListItems.Where(x => x.ParentId == 0))
+														{
+															<option value="@item.Id" @(item.Id == Model.Item.ParentId ? " selected" : "")>
+																@item.Name
+															</option>
+															foreach (var itemC in Model.ListItems.Where(x => x.ParentId == item.Id))
+															{
+
+																<option value="@itemC.Id" @(itemC.Id == Model.Item.ParentId ? " selected" : "")>
+																	--@itemC.Name
+																</option>
+															}
+														}
+													}
+												</select>
+											</div>
+											<div class="d-flex">
+												<div class="form-group col-md-4 d-flex me-2" style="align-items:center">
+													<label class="col-md-3" for="add1">Thứ tự</label>
+													<input type="number" class="form-control" id="OrderDisplay" name="OrderDisplay">
+												</div>
+												
+												@if (ViewBag.Action == "Add")
+												{
+													<div class="col-sm-3" style="margin-right:20px">
+														<label>Hiển thị</label>
+														<label>
+															<input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Item.IsShow == false) ? "" : "checked") />
+															<input type="hidden" name="IsShow" value="false" />
+														</label>
+													</div>
+												}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<nav class="d-flex justify-content-end">
+					<nav class="d-flex justify-content-between">
+						<div class="d-flex nav nav-tabs">
+							<button type="submit" class="btn btn-primary nav-link active" style="margin-right:15px">@ViewBag.ActionText</button>
+							<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+						</div>
+					</nav>
+				</nav>
+			</div>
+		</form>
+	</div>
+</div>
+<style>
+	.lst-gallery {
+		display: flex;
+		gap: 15px;
+		flex-wrap: wrap;
+	}
+
+		.lst-gallery table {
+			width: calc(100%/3 - 10px);
+		}
+
+	.table > :not(caption) > * > * {
+		padding: 5px;
+	}
+</style>
+<script>
+	$(document).ready(function () {
+
+		var form = $("#form-action");
+
+		form.validate({
+			rules: {
+				Name: {
+					required: true
+				},
+			},
+			messages: {
+				Name: {
+					required: "Tên module bắt buộc nhập."
+				}
+			}
+		});
+
+		$('#form-action').submit(function (e) {
+			e.preventDefault();
+
+			if (!form.valid()) {
+				return;
+			}
+
+			var formData = $(this).serialize();
+
+			$.ajax({
+				url: '/AdminCms/Attributes/Action',
+				type: 'POST',
+				data: formData,
+				success: function (response) {
+					showMessage(response.message, "success");
+					$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+				},
+				error: function (xhr, status, error) {
+					showMessage(error.message, "error");
+				}
+			});
+
+			return false;
+		});
+		$('.btn-back').on("click", function () {
+			loadAjaxForm(urlListItem, "#loadGridView");
+			$('#loadGridView').show();
+			$('#AjaxForm').html('');
+		});
+
+		$('.IsAvatar').change(function () {
+			let src = $(this).data('url');
+			$('#Avatar').val(src);
+			$('#AddAvatar').find('input').val(src);
+			$('#AddAvatar').find('img').attr('src', src);
+		});
+	});
+
+
+
+</script>
+

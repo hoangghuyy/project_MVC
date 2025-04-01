@@ -1,0 +1,574 @@
+﻿@using project_mvc.Helpers
+@using project_mvc.Models
+@model project_mvc.ViewModels.BannerViewModel
+
+<header>
+	<div class="header-top">
+		<div class="container">
+			<div class="bottom">
+				@if (Model.ListLogos != null && Model.ListLogos.Any())
+				{
+					@foreach (var item in Model.ListLogos)
+					{
+						if (!string.IsNullOrEmpty(item.LinkUrl))
+						{
+							<a href="@item.LinkUrl" class="logo img" title="@item.Name">
+								<span class="img-logo">
+									<img src="@item.UrlPicture" alt="@item.Name" />
+								</span>
+								<span>
+									<span>@item.Name</span>
+									<span>@item.Title</span>
+								</span>
+							</a>
+						}
+						else
+						{
+							<div class="logo img">
+								<span class="img-logo">
+									<img src="@item.UrlPicture" alt="@item.Name" />
+								</span>
+								<span>
+									<span>@item.Name</span>
+									<span>@item.Title</span>
+								</span>
+							</div>
+						}
+
+					}
+				}
+				<div class="search-h-top">
+					<form action="/tim-kiem" method="post" id="Search" class="search-header">
+						<label for="SearchAuto"
+							   style="display:none"></label> <input name="q" autofocus=""
+																	class="form-control notvalid ui-autocomplete-input" placeholder="Bạn tìm gì?" required=""
+																	id="SearchAutoBottom" autocomplete="off"> <button role="button" aria-label="search">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+								 class="bi bi-search" viewBox="0 0 16 16">
+								<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+								</path>
+							</svg>
+						</button>
+					</form>
+				</div>
+				<div class="header-right d-flex" style="gap: 30px; align-items: center;">
+					<div class="cart" style="position:relative">
+						<div class="icon-cart">
+							<a href="/cart" title="Cart" rel="nofollow">
+								<img width="40" height="40" src="~/html/style/assests/images/icons8-cart-32.png" alt="shopping-cart" />
+							</a>
+						</div>
+						<div class="text-cart">
+							<span>Cart</span>
+						</div>
+						<div class="num" id="cart-count">
+							0
+						</div>
+					</div>
+					<div class="account" style="position:relative">
+						<div class="icon-account">
+							<a href="#" title="Account" rel="nofollow" id="account-icon">
+								<img style="margin-left: 0.5rem" width="40" height="40" src="~/html/style/assests/images/icons8-account-32.png" alt="shopping-cart" />
+							</a>
+						</div>
+						<div class="text-account">
+							<span id="account-text">Account</span>
+							<span id="welcome-text" style="display:none"></span>
+						</div>
+
+						<!-- Login Popup -->
+						<div id="login-popup" class="account-popup" style="display:none">
+							<div class="popup-content">
+								<h2>ĐĂNG NHẬP</h2>
+								<p>Nếu bạn đã đăng ký, xin vui lòng đăng nhập.</p>
+
+								<form id="login-form">
+									<div class="form-group">
+										<label for="login-email">Địa chỉ email/Số điện thoại</label>
+										<input type="text" id="login-email" placeholder="Nhập email" required>
+									</div>
+
+									<div class="form-group">
+										<label for="login-password">Mật khẩu</label>
+										<input type="password" id="login-password" placeholder="Nhập mật khẩu" required>
+									</div>
+
+									<button type="submit" class="btn-login">Đăng nhập</button>
+								</form>
+
+								<div class="forgot-password">
+									<a href="#" id="forgot-password">Quên mật khẩu?</a>
+								</div>
+
+								<div class="social-login">
+									<p>Hoặc đăng nhập bằng</p>
+									<div class="social-icons">
+										<a href="#" class="social-icon facebook">Facebook</a>
+										<a href="#" class="social-icon google">G+ Google+</a>
+										<a href="#" class="social-icon zalo">Zalo</a>
+									</div>
+								</div>
+
+								<div class="register-cta">
+									<p>Tạo tài khoản của bạn và tận hưởng trải nghiệm mua sắm mới.</p>
+									<button id="show-register" class="btn-register">Tạo tài khoản</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- Register Popup -->
+						<div id="register-popup" class="account-popup" style="display:none">
+							<div class="popup-content">
+								<h2>TẠO TÀI KHOẢN</h2>
+
+								<form id="register-form">
+									<div class="form-group">
+										<label for="register-name">Họ tên</label>
+										<input type="text" id="register-name" placeholder="Nhập họ tên" required>
+									</div>
+
+									<div class="form-group">
+										<label for="register-phone">Số điện thoại</label>
+										<input type="tel" id="register-phone" placeholder="Nhập số điện thoại" required>
+									</div>
+
+									<div class="form-group">
+										<label for="register-email">Email</label>
+										<input type="email" id="register-email" placeholder="Nhập email của bạn" required>
+									</div>
+
+									<div class="form-group">
+										<label for="register-password">Mật khẩu</label>
+										<input type="password" id="register-password" placeholder="Nhập mật khẩu" required>
+									</div>
+
+									<button type="submit" class="btn-register">Tạo tài khoản</button>
+								</form>
+
+								<div class="terms">
+									<p>Khi bạn nhấn Đăng ký, bạn đã đồng ý thực hiện mọi giao dịch mua bán theo điều kiện sử dụng và chính sách của CTLuxhome</p>
+								</div>
+
+								<div class="social-login">
+									<p>Hoặc đăng nhập bằng</p>
+									<div class="social-icons">
+										<a href="#" class="social-icon facebook">Facebook</a>
+										<a href="#" class="social-icon google">G+ Google+</a>
+										<a href="#" class="social-icon zalo">Zalo</a>
+									</div>
+								</div>
+
+								<div class="login-cta">
+									<button id="show-login" class="btn-login">Đăng nhập</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- Success Message -->
+						<div id="success-message" class="account-popup" style="display:none">
+							<div class="popup-content">
+								<h2>Đăng ký thành công!</h2>
+								<p>Tài khoản của bạn đã được tạo thành công. Vui lòng đăng nhập.</p>
+								<button id="go-to-login" class="btn-login">Đăng nhập</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="header-bottom">
+		<div class="menu-bottom">
+			@if (Model.ListLogos != null && Model.ListLogos.Any())
+			{
+				@foreach (var item in Model.ListLogos)
+				{
+					if (!string.IsNullOrEmpty(item.LinkUrl))
+					{
+						<a href="@item.LinkUrl" class="logo img logo_bottom" title="@item.Name">
+							<span class="img-logo">
+								<img src="@item.UrlPicture" alt="@item.Name" />
+							</span>
+							<span>
+								<span>@item.Name</span>
+								<span>@item.Title</span>
+							</span>
+						</a>
+					}
+					else
+					{
+						<div class="logo img logo_bottom">
+							<span class="img-logo">
+								<img src="@item.UrlPicture" alt="@item.Name" />
+							</span>
+							<span>
+								<span>@item.Name</span>
+								<span>@item.Title</span>
+							</span>
+						</div>
+					}
+
+				}
+			}
+			<div class="container menu-mb">
+				<div class="module">
+					<div class="module-name">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							 fill="currentColor" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16">
+							<path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z">
+							</path>
+						</svg>
+						<span>Category</span>
+					</div>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+						 fill="currentColor" class="bi bi-chevron-down icon-down" viewBox="0 0 16 16">
+						<path fill-rule="evenodd"
+							  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708">
+						</path>
+					</svg>
+					<div class="list-module submenu">
+						@if (Model.ListPositionProduct != null && Model.ListPositionProduct.Any())
+						{
+							int i = 1;
+							@foreach (var menu in Model.ListPositionProduct)
+							{
+								<ul style="padding-left: 0">
+									@if (Model.ListProduct != null && Model.ListProduct.Any())
+									{
+										@foreach (var item in Model.ListProduct.Where(x => x.ParentId == 0))
+										{
+											<li class="item-menu @(i > 7 ? "hide" : string.Empty)">
+												<div>
+													<div class="icon">
+														<img src="@item.UrlPicture" alt="icon"
+															 width="450" height="550" loading="lazy">
+													</div>
+													<div>
+														<a href="@(!string.IsNullOrEmpty(item.NameAscii) ? $"/{item.NameAscii}" : item.LinkUrl)"
+														   target="_self"
+														   title="@item.Name">
+															@item.Name
+														</a>
+													</div>
+												</div>
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+													 class="bi bi-chevron-down icon-down-2 hide-pc" viewBox="0 0 16 16">
+													<path fill-rule="evenodd"
+														  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708">
+													</path>
+												</svg>
+												<div class="module-product submenu-2">
+													<ul>
+														@foreach (var item2 in Model.ListProduct.Where(x => x.ParentId == item.Id))
+														{
+															<li>
+																<strong>
+																	<a href="@(!string.IsNullOrEmpty(item2.NameAscii) ? $"/{item2.NameAscii}" : item2.LinkUrl)"
+																	   target="_self"
+																	   title="@item2.Name">
+																		@item2.Name
+																	</a>
+																</strong>
+															</li>
+														}
+
+													</ul>
+												</div>
+											</li>
+
+										}
+										<li class="more-module">
+											<p>
+												Xem Thêm
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+													 fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+													<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z">
+													</path>
+												</svg>
+											</p>
+										</li>
+										<li class="hide-module">
+											<p>
+												Rút gọn
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+													 fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+													<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z">
+													</path>
+												</svg>
+											</p>
+										</li>
+									}
+								</ul>
+							}
+
+
+						}
+					</div>
+				</div>
+				@if (Model.ListPositionContent != null && Model.ListPositionContent.Any())
+				{
+					@foreach (var menu in Model.ListPositionContent)
+					{
+						<ul class="menu" style="margin-bottom: 0">
+							@if (Model.ListContent != null && Model.ListContent.Any())
+							{
+								@foreach (var item in Model.ListContent.Where(x => x.ParentId == 0))
+								{
+									<li>
+										<a href="@(!string.IsNullOrEmpty(item.NameAscii) ? $"/{item.NameAscii}" : item.LinkUrl)"
+										   target="_self"
+										   title="@item.Name">
+											@item.Name
+										</a>
+										<span class="icon-down hide-pc">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+												 class="bi bi-chevron-down" viewBox="0 0 16 16">
+												<path fill-rule="evenodd"
+													  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708">
+												</path>
+											</svg>
+										</span>
+										<ul class="submenu">
+											@foreach (var item2 in Model.ListContent.Where(x => x.ParentId == item.Id))
+											{
+												<li>
+													<a href="@(!string.IsNullOrEmpty(item.NameAscii) ? $"/{item2.NameAscii}" : item2.LinkUrl)"
+													   target="_self"
+													   title="@item2.Name">
+														@item2.Name
+													</a>
+												</li>
+											}
+
+										</ul>
+									</li>
+								}
+							}
+
+
+						</ul>
+					}
+
+				}
+			</div>
+			<div class="cart_bottom" style="position:relative">
+				<div class="icon-cart">
+					<a href="/cart" title="" rel="nofollow">
+						<img width="40" height="40" src="~/html/style/assests/images/icons8-cart-30.png" alt="shopping-cart" />
+					</a>
+				</div>
+				<div class="num" id="cart-count-bottom">
+					0
+				</div>
+			</div>
+			<div class="search_bottom">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+					 fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+					</path>
+				</svg>
+			</div>
+			<div class="form_search_bottom">
+				<form action="/tim-kiem" method="POST" class="search-header form-search">
+					<label for="SearchAuto" style="display:none"></label> <input name="q" class="form-control notvalid ui-autocomplete-input" placeholder="Bạn tìm gì?" required="" id="SearchAutoBottom2" autocomplete="off"> <button role="button" aria-label="search">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+							 class="bi bi-search" viewBox="0 0 16 16">
+							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+							</path>
+						</svg>
+					</button>
+				</form>
+			</div>
+			<div class="menu-mobile">
+				<div class="bar1"></div>
+				<div class="bar2"></div>
+				<div class="bar3"></div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<style>
+	.num {
+		color: #fff;
+		background-color: red;
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		padding-top: 1px;
+		position: absolute;
+		top: -8px;
+		right: -3px;
+	}
+
+	.text-cart span,
+	.text-account span {
+		display: block;
+		color: var(--color-white);
+	}
+
+	/* Account Section */
+	.account {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		position: relative;
+	}
+
+	.icon-account img {
+		vertical-align: middle;
+	}
+
+	.text-account {
+		display: flex;
+		flex-direction: column;
+		margin-left: 8px;
+	}
+
+	#account-text, #welcome-text {
+		font-size: 14px;
+		color: #333;
+	}
+
+	/* Popup Styles */
+	.account-popup {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		width: 350px;
+		background: white;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		z-index: 1000;
+		padding: 20px;
+		margin-top: 10px;
+	}
+
+	.popup-content h2 {
+		font-size: 20px;
+		margin-bottom: 15px;
+		color: #333;
+		text-align: center;
+	}
+
+	.form-group {
+		margin-bottom: 15px;
+	}
+
+		.form-group label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: 500;
+		}
+
+		.form-group input {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+	.btn-login, .btn-register {
+		width: 100%;
+		padding: 10px;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		margin-top: 10px;
+	}
+
+	.btn-login {
+		background-color: #ff6b6b;
+		color: white;
+	}
+
+	.btn-register {
+		background-color: #4ecdc4;
+		color: white;
+	}
+
+	.forgot-password {
+		text-align: right;
+		margin: 10px 0;
+	}
+
+		.forgot-password a {
+			color: #666;
+			font-size: 13px;
+			text-decoration: none;
+		}
+
+	.social-login {
+		margin: 20px 0;
+		text-align: center;
+	}
+
+		.social-login p {
+			color: #666;
+			font-size: 14px;
+			margin-bottom: 10px;
+		}
+
+	.social-icons {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	.social-icon {
+		padding: 8px 15px;
+		border-radius: 4px;
+		font-size: 14px;
+		text-decoration: none;
+		color: white;
+	}
+
+	.facebook {
+		background-color: #3b5998;
+	}
+
+	.google {
+		background-color: #db4437;
+	}
+
+	.zalo {
+		background-color: #0068ff;
+	}
+
+	.register-cta, .login-cta {
+		margin-top: 20px;
+		text-align: center;
+	}
+
+		.register-cta p, .terms p {
+			font-size: 14px;
+			color: #666;
+			margin-bottom: 15px;
+		}
+
+	.terms {
+		margin: 15px 0;
+		font-size: 12px;
+		color: #999;
+		text-align: center;
+	}
+
+	#success-message {
+		text-align: center;
+	}
+
+		#success-message p {
+			margin: 15px 0;
+			color: #333;
+		}
+
+</style>
+<script src="~/html/style/assests/js/account_popup.js"></script>
+
+

@@ -3,9 +3,9 @@ using project_mvc.Helpers;
 
 namespace project_mvc.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Route(WebConfig.AdminAlias)]
-    [CheckLoginAdmin]
+	[Area("Admin")]
+	[Route(WebConfig.AdminAlias)]
+	[CheckLoginAdmin]
     public class AuthController : Controller
     {
         public IActionResult Login()

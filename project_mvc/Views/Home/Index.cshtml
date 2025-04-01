@@ -1,8 +1,410 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using project_mvc.Helpers
+@using project_mvc.Models
+@using project_mvc.Services.Client.Models
+@model project_mvc.ViewModels.HomeViewModel
+@{
+
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="slide-index mb-block">
+	<div class="owl-carousel owl-theme owl-loaded owl-drag">
+		<div class="owl-stage-outer">
+			<div class="owl-stage" style="transform: translate3d(-2722px, 0px, 0px); transition: 1s; width: 9527px;">
+				@if (Model.ListSlides != null && Model.ListSlides.Any())
+				{
+					@foreach (var item in Model.ListSlides)
+					{
+						if (!string.IsNullOrEmpty(item.LinkUrl))
+						{
+							<div class="owl-item active" style="width: 1361px;">
+								<a class="item">
+									<img src="@item.UrlPicture" alt="@item.Name"
+										 width="1200" height="566" loading="lazy">
+								</a>
+							</div>
+						}
+						else
+						{
+							<div class="owl-item active" style="width: 1361px;">
+								<div class="item">
+									<img src="@item.UrlPicture" alt="@item.Name"
+										 width="1200" height="566" loading="lazy">
+								</div>
+							</div>
+						}
+					}
+				}
+			</div>
+		</div>
+		<div class="owl-nav">
+			<button type="button" role="button" class="owl-prev" aria-label="prev">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+					 class="bi bi-chevron-left" viewBox="0 0 16 16">
+					<path fill-rule="evenodd"
+						  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z">
+					</path>
+				</svg>
+			</button><button type="button" role="button" class="owl-next" aria-label="next">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+					 class="bi bi-chevron-right" viewBox="0 0 16 16">
+					<path fill-rule="evenodd"
+						  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z">
+					</path>
+				</svg>
+			</button>
+		</div>
+		<div class="owl-dots">
+			<button role="button" class="owl-dot active"
+					aria-label="dot">
+				<span></span>
+			</button><button role="button" class="owl-dot"
+							 aria-label="dot">
+				<span></span>
+			</button><button role="button" class="owl-dot"
+							 aria-label="dot">
+				<span></span>
+			</button>
+		</div>
+	</div>
+</section>
+
+
+@if (Model.ListPosition!=null && Model.ListPosition.Any())
+{
+	@foreach (ModulePosition position in Model.ListPosition)
+	{
+		switch (position.Code)
+		{
+			case StaticEnum.SlideIndex:
+				break;
+			case StaticEnum.ProductHotIndex:
+				if (position.ProductItems != null && position.ProductItems.Any())
+				{
+					<section class="product-hot-index pb-block">
+						<div class="container">
+							<div class="block"
+								 style="background:url(/Upload/background/background-product-hot.webp) no-repeat;background-size:cover">
+								<h1 class="title">
+									<span>
+										@position.Name
+									</span>
+								</h1>
+								<div class="silde-product-hot">
+									<div class="owl-carousel owl-theme owl-loaded owl-drag">
+										<div class="owl-stage-outer">
+											<div class="owl-stage" style="transform: translate3d(-1530px, 0px, 0px); transition: 1s; width: 4080px;">
+												@foreach (var item in position.ProductItems)
+												{
+													<div class="owl-item active" style="width: 240px; margin-right: 15px;">
+														<div class="item-product white hover-img">
+															<a href="@Utility.Link(item._NameAscii!, string.Empty, item.LinkUrl!)"
+															   title="@item.Name" class="img">
+																<div class="over-border">
+																	<div class="line"></div>
+																	<div class="line line-bottom"></div>
+																</div><img src="@item.UrlPicture"
+																		   alt="@item.Name" width="500" height="500" loading="lazy">
+															</a>
+															<div class="info">
+																<h3 class="product-name">
+																	<a href="@Utility.Link(item._NameAscii!, string.Empty, item.LinkUrl!)" target="_self"
+																	   title="@item.Name - 32S5400">@item.Name</a>
+																</h3>
+																<div class="price-box">
+																	@if (item.PriceOld.HasValue && item.PriceOld > 0)
+																	{
+																		<span class="price">
+																			@Utility.GetFormatPriceType(item.PriceOld, 1, "", true)
+																		</span>
+																	}
+																	<span class="compare-price">
+																		@Utility.GetFormatPriceType(item.Price, 1, "", true)
+																	</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												}
+
+											</div>
+										</div>
+										<div class="owl-nav">
+											<button type="button" role="button" class="owl-prev" aria-label="prev">
+												<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+													 class="bi bi-chevron-left" viewBox="0 0 16 16">
+													<path fill-rule="evenodd"
+														  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z">
+													</path>
+												</svg>
+											</button><button type="button" role="button" class="owl-next" aria-label="next">
+												<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+													 class="bi bi-chevron-right" viewBox="0 0 16 16">
+													<path fill-rule="evenodd"
+														  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z">
+													</path>
+												</svg>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				}
+				break;
+			case StaticEnum.ProductIndex:
+				if (position.WebsiteModuleProductItems != null && position.WebsiteModuleProductItems.Any())
+				{
+					if (position.ProductItems != null && position.ProductItems.Any())
+					{
+						<section class="product-index pb-block">
+							<div class="container">
+								<div class="block">
+									<div class="block-right">
+										@foreach (var module in position.WebsiteModuleProductItems.Where(x => x.ParentId == 0))
+										{
+											<div class="product-index-title title--before-red">
+												<h2 class="title">
+													<a href="@module.NameAscii">
+														@module.Name
+													</a>
+												</h2>
+												@if (position.WebsiteModuleProductItems.Any(x => x.ParentId == module.Id))
+												{
+													<div class="list-module">
+
+														@foreach (var moduleC in position.WebsiteModuleProductItems.Where(x => x.ParentId == module.Id))
+														{
+															<a href="@moduleC.NameAscii" target="_self">@moduleC.Name </a>
+														}
+													</div>
+												}
+											</div>
+										}
+
+										<div class="list-product-index">
+											@foreach (var item in position.ProductItems)
+											{
+												<div class="item-product hover-img" data-product-id="@item.Id">
+													<a href="@item.NameAscii"
+													   title="Tivi Sony 4K 43 inch KD" class="img">
+														<div class="over-border">
+															<div class="line"></div>
+															<div class="line line-bottom"></div>
+														</div>
+														<img src="@item.UrlPicture"
+															 alt="@item.Name" width="655" height="655" loading="lazy">
+													</a>
+													<div class="info">
+														<h3 class="product-name">
+															<a href="@item.NameAscii" target="_self"
+															   title="@item.Name">
+																@item.Name
+															</a>
+														</h3>
+														<div class="price-box">
+															@if (item.PriceOld.HasValue && item.PriceOld > 0)
+															{
+																<span class="price">
+																	@Utility.GetFormatPriceType(item.PriceOld, 1, "", true)
+																</span>
+															}
+															<span class="compare-price">
+																@Utility.GetFormatPriceType(item.Price, 1, "", true)
+															</span>
+														</div>
+														<button class="add-to-cart w-100">
+															<i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ
+														</button>
+													</div>
+												</div>
+											}
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					}
+				}
+
+				break;
+		}
+
+	}
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+
+
+
+<div class="partner-index pb-block">
+	<div class="container">
+		<div class="title--before-red">
+			<h2 class="title"><span> Đối tác </span></h2>
+		</div>
+		<div class="slide-partner">
+			<div class="owl-carousel owl-theme owl-loaded owl-drag">
+				<div class="owl-stage-outer">
+					<div class="owl-stage" style="transform: translate3d(-1784px, 0px, 0px); transition: 1s; width: 4014px;">
+						@if (Model.ListTradeMark != null && Model.ListTradeMark.Any())
+						{
+							@foreach (var item in Model.ListTradeMark)
+							{
+								if (!string.IsNullOrEmpty(item.LinkUrl))
+								{
+									<div class="owl-item active" style="width: 208px; margin-right: 15px;">
+										<a class="item">
+											<img src="@item.UrlPicture" alt="@item.Name" width="68"
+												 height="40" loading="lazy">
+										</a>
+									</div>
+								}
+								else
+								{
+									<div class="owl-item active" style="width: 208px; margin-right: 15px;">
+										<div class="item">
+											<img src="@item.UrlPicture" alt="@item.Name" width="68"
+												 height="40" loading="lazy">
+										</div>
+									</div>
+								}
+							}
+						}
+					</div>
+				</div>
+				<div class="owl-nav">
+					<button type="button" role="button" class="owl-prev" aria-label="prev">
+						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+							 class="bi bi-chevron-left" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z">
+							</path>
+						</svg>
+					</button><button type="button" role="button" class="owl-next" aria-label="next">
+						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+							 class="bi bi-chevron-right" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z">
+							</path>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+
+<style>
+	.add-to-cart {
+		margin-top: 10px;
+		background-color: var(--color-footer) !important;
+		color: var(--color-text) !important;
+		border: 1px solid var(--color-border) !important;
+		transition: all 0.3s ease;
+		font-weight: 500;
+		padding: 7px;
+		border-radius: 20px;
+		transition: background 0.5s linear, border 0.5s linear;
+		cursor: pointer;
+	}
+
+		/* Hiệu ứng khi hover */
+		.add-to-cart:hover {
+			background-color: var(--color-red) !important; /* Màu đỏ Bootstrap */
+			color: var(--color-footer) !important;
+			border-color: var(--color-border) !important;
+		}
+</style>
+
+<script>
+	
+
+
+// Hàm thêm sản phẩm vào giỏ hàng
+function addToCart(event, productId, productName, productImage, price, priceOld, nameAscii) {
+    event.preventDefault();
+    
+    // Lấy giỏ hàng từ cookie hoặc tạo mới
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Kiểm tra sản phẩm đã có trong giỏ chưa
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            image: productImage,
+            price: price,
+            priceOld: priceOld,
+            nameAscii: nameAscii,
+            quantity: 1
+        });
+    }
+    
+    // Lưu vào localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Cập nhật số lượng trên icon giỏ hàng
+    updateCartCount();
+    
+   
+}
+
+// Hàm cập nhật số lượng trên icon giỏ hàng
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+		document.querySelectorAll('#cart-count, #cart-count-bottom').forEach(element => {
+			element.textContent = totalItems;
+		});
+}
+
+// Gán sự kiện click cho các nút thêm vào giỏ
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            const productItem = this.closest('.item-product');
+            const productId = productItem.dataset.productId || ''; 
+            const productName = productItem.querySelector('.product-name a').textContent.trim();
+            const productImage = productItem.querySelector('img').src;
+            const priceText = productItem.querySelector('.compare-price').textContent.trim();
+            const priceOldText = productItem.querySelector('.price')?.textContent.trim();
+            
+            // Chuyển đổi giá từ chuỗi sang số (loại bỏ ký tự không phải số)
+            const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0;
+            const priceOld = priceOldText ? parseFloat(priceOldText.replace(/[^\d]/g, '')) : 0;
+            const nameAscii = productItem.querySelector('.product-name a').getAttribute('href');
+            
+            addToCart(event, productId, productName, productImage, price, priceOld, nameAscii);
+
+			const notification = document.createElement('div');
+				notification.textContent = 'Đã thêm vào giỏ hàng';
+				notification.style.position = 'fixed';
+				notification.style.bottom = '20px';
+				notification.style.right = '20px';
+				notification.style.backgroundColor = '#4CAF50';
+				notification.style.color = 'white';
+				notification.style.padding = '10px 20px';
+				notification.style.borderRadius = '5px';
+				notification.style.zIndex = '1000';
+				document.body.appendChild(notification);
+
+				setTimeout(() => {
+					notification.remove();
+				}, 2000);
+        });
+    });
+    
+    // Cập nhật số lượng giỏ hàng khi trang được tải
+    updateCartCount();
+});
+</script>

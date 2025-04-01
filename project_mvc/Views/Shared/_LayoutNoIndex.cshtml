@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="@ViewBag.Lang">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <meta name="robots" content="noodp,noindex,nofollow" />
+    <meta name="revisit-after" content="1 days" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/fonts/Mulish-Bold.ttf" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/fonts/Mulish-SemiBold.ttf" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/fonts/Mulish-Medium.ttf" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/fonts/Mulish-Regular.ttf" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="~/html/style/assests/verdors/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/html/style/assests/styles/style.css" />
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/cookies/js.cookie.min.js"></script>
+    <script src="~/html/style/assests/verdors/js/owl.carousel.min.js"></script>
+    <script src="~/html/style/assests/verdors/js/jquery-ui.min.js"></script>
+    <script src="~/html/process/ProcessData.js"></script>
+    <script src="~/html/style/assests/js/main.js"></script>
+    <script src="~/html/style/js/jquery.min.js"></script>
+
+</head>
+<body>
+    <div class="_loading"><span></span></div>
+    @await Component.InvokeAsync("HeadPage")
+
+    @RenderBody()
+    @await Component.InvokeAsync("FootPage")
+
+</body>
+</html>

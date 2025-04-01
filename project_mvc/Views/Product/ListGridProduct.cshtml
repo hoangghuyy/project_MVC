@@ -1,0 +1,652 @@
+﻿@using project_mvc.Helpers
+@using project_mvc.Models
+@model project_mvc.ViewModels.ModuleViewModel
+
+<section class="breadcrumb">
+	<div class="container">
+		<ul style="padding-left: 0">
+			<li>
+				<a href="/" title="Trang chủ"> Trang chủ </a> <span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16"
+						 height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+						<path fill-rule="evenodd"
+							  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708">
+						</path>
+					</svg>
+				</span>
+			</li>
+			<li>
+				<h1 style="margin-bottom: 0">@Model.ModuleProductItem!.Name</h1>
+			</li>
+		</ul>
+	</div>
+</section>
+
+<section class="list-product">
+	<div class="container">
+		<div class="list-product-content">
+			<div class="product-left">
+				<div class="cate-menu">
+					<div class="title">Product Catalog</div>
+					@if (Model.ListPositionProduct != null && Model.ListPositionProduct.Any())
+					{
+						int i = 1;
+						@foreach (var menu in Model.ListPositionProduct)
+						{
+							<ul class="item-big menu-product" style="padding-left: 0">
+								 @* @if (Model.ListProduct != null && Model.ListProduct.Any())
+								 {
+								 	@foreach (var item in Model.ListProduct.Where(x => x.ParentId == 0))
+								 	{
+								 		<li class="nav-item @(i > 7 ? "hide" : string.Empty)">
+								 			<a href="@(!string.IsNullOrEmpty(item.NameAscii) ? $"/{item.NameAscii}" : item.LinkUrl)"
+								 			   target="_self"
+								 			   title="@item.Name">
+								 				@item.Name
+								 			</a>
+								 			<div class="icon-down-menu">
+								 				<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
+								 					 fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+								 					<path fill-rule="evenodd"
+								 						  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708">
+								 					</path>
+								 				</svg>
+								 			</div>
+								 			<ul style="padding-left: 0">
+								 				@foreach (var item2 in Model.ListProduct.Where(x => x.ParentId == item.Id))
+								 				{
+								 					<li>
+								 						<a href="@(!string.IsNullOrEmpty(item2.NameAscii) ? $"/{item2.NameAscii}" : item2.LinkUrl)"
+								 						   target="_self"
+								 						   title="@item2.Name">
+								 							@item2.Name
+								 						</a>
+								 					</li>
+								 				}
+								 			</ul>
+								 		</li>
+								 	}
+
+								 } *@
+
+							</ul>
+						}
+
+					}
+					<div class="more-btn more-module-product">Xem Thêm</div>
+				</div>
+				<div class="filter-content select-attr">
+					<disv class="filter">
+						<aside class="aside-item">
+							<div class="aside-title">Theo mức giá</div>
+							<div class="aside-content">
+								<ul>
+									<li class="filter-item">
+										<label class="text" for="attr3">
+											<input type="checkbox"
+												   id="attr3" data-text="Từ 2 - 5 triệu" data-name="theo-muc-gia"
+												   data-attr="1" value="3"> <span>Từ 2 - 5 triệu</span> <span class="checkmark"></span> <span>(6)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr4">
+											<input type="checkbox"
+												   id="attr4" data-text="Từ 5 - 10 triệu" data-name="theo-muc-gia"
+												   data-attr="1" value="4"> <span>Từ 5 - 10 triệu</span> <span class="checkmark"></span> <span>(53)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr5">
+											<input type="checkbox"
+												   id="attr5" data-text="Từ 10 - 20 triệu" data-name="theo-muc-gia"
+												   data-attr="1" value="5"> <span>Từ 10 - 20 triệu</span> <span class="checkmark"></span> <span>(54)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr6">
+											<input type="checkbox"
+												   id="attr6" data-text="Từ 20 - 30 triệu" data-name="theo-muc-gia"
+												   data-attr="1" value="6"> <span>Từ 20 - 30 triệu</span> <span class="checkmark"></span> <span>(27)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr34">
+											<input type="checkbox"
+												   id="attr34" data-text="Trên 30 triệu" data-name="theo-muc-gia"
+												   data-attr="1" value="34"> <span>Trên 30 triệu</span> <span class="checkmark"></span> <span>(16)</span>
+										</label>
+									</li>
+								</ul>
+							</div><input type="hidden" name="theo-muc-gia">
+						</aside>
+						<aside class="aside-item">
+							<div class="aside-title">Kích thước</div>
+							<div class="aside-content">
+								<ul>
+									<li class="filter-item">
+										<label class="text" for="attr30">
+											<input type="checkbox"
+												   id="attr30" data-text="32 đến 50 Inch" data-name="kich-thuoc"
+												   data-attr="29" value="30"> <span>32 đến 50 Inch</span> <span class="checkmark"></span> <span>(52)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr31">
+											<input type="checkbox"
+												   id="attr31" data-text="55 Inch" data-name="kich-thuoc" data-attr="29"
+												   value="31"> <span>55 Inch</span> <span class="checkmark"></span>
+											<span>(36)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr32">
+											<input type="checkbox"
+												   id="attr32" data-text="65 Inch" data-name="kich-thuoc" data-attr="29"
+												   value="32"> <span>65 Inch</span> <span class="checkmark"></span>
+											<span>(34)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr39">
+											<input type="checkbox"
+												   id="attr39" data-text="75 Inch" data-name="kich-thuoc" data-attr="29"
+												   value="39"> <span>75 Inch</span> <span class="checkmark"></span>
+											<span>(17)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr33">
+											<input type="checkbox"
+												   id="attr33" data-text="Trên 75 Inch" data-name="kich-thuoc"
+												   data-attr="29" value="33"> <span>Trên 75 Inch</span> <span class="checkmark"></span> <span>(15)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr47">
+											<input type="checkbox"
+												   id="attr47" data-text="60 inch" data-name="kich-thuoc" data-attr="29"
+												   value="47"> <span>60 inch</span> <span class="checkmark"></span>
+											<span>(2)</span>
+										</label>
+									</li>
+								</ul>
+							</div><input type="hidden" name="kich-thuoc">
+						</aside>
+						<aside class="aside-item">
+							<div class="aside-title">Loại tivi</div>
+							<div class="aside-content">
+								<ul>
+									<li class="filter-item">
+										<label class="text" for="attr41">
+											<input type="checkbox"
+												   id="attr41" data-text="Tivi LED" data-name="loai-tivi" data-attr="40"
+												   value="41"> <span>Tivi LED</span> <span class="checkmark"></span>
+											<span>(14)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr42">
+											<input type="checkbox"
+												   id="attr42" data-text="Tivi Smart Ultra HD 4K" data-name="loai-tivi"
+												   data-attr="40" value="42"> <span>Tivi Smart Ultra HD 4K</span> <span class="checkmark"></span> <span>(91)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr43">
+											<input type="checkbox"
+												   id="attr43" data-text="Tivi Smart Ultra HD 8K" data-name="loai-tivi"
+												   data-attr="40" value="43"> <span>Tivi Smart Ultra HD 8K</span> <span class="checkmark"></span> <span>(1)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr44">
+											<input type="checkbox"
+												   id="attr44" data-text="Tivi OLED" data-name="loai-tivi" data-attr="40"
+												   value="44"> <span>Tivi OLED</span> <span class="checkmark"></span>
+											<span>(10)</span>
+										</label>
+									</li>
+									<li class="filter-item">
+										<label class="text" for="attr45">
+											<input type="checkbox"
+												   id="attr45" data-text="Tivi QLED" data-name="loai-tivi" data-attr="40"
+												   value="45"> <span>Tivi QLED</span> <span class="checkmark"></span>
+											<span>(57)</span>
+										</label>
+									</li>
+								</ul>
+							</div><input type="hidden" name="loai-tivi">
+						</aside>
+					</disv>
+				</div>
+			</div>
+			<div class="product-right">
+				<div class="trademark">
+					<div class="title">Thương hiệu</div>
+					<ul class="list-trademark">
+						<li data-id="1039">
+							<div class="img">
+								<img src="/Upload/thuong-hieu/samsung.webp" alt="Samsung" width="136"
+									 height="40" loading="lazy">
+							</div>
+						</li>
+						<li data-id="1038">
+							<div class="img">
+								<img src="/Upload/thuong-hieu/tcl.webp" alt="TCL" width="68" height="40"
+									 loading="lazy">
+							</div>
+						</li>
+						<li data-id="1037">
+							<div class="img">
+								<img src="/Upload/thuong-hieu/icon-LG.webp" alt="LG" width="1080"
+									 height="476" loading="lazy">
+							</div>
+						</li>
+						<li data-id="1036">
+							<div class="img">
+								<img src="/Upload/thuong-hieu/sony.webp" alt="Sony" width="124" height="40"
+									 loading="lazy">
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="fillter-icon hide-pc">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+						 fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+						<path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z">
+						</path>
+					</svg>
+				</div>
+				<div class="category-product">
+					<div class="sort-cate">
+						<span class="coll-count"><span>184</span> Sản phẩm</span>
+						<div class="sort-cate-right">
+							<span class="sort-title"> Sắp xếp: </span>
+							<div class="select" id="sort-product">
+								<select>
+									<option value="">Mặc định</option>
+									<option value="1" checked="">Tên A-Z</option>
+									<option value="2" checked="">Tên Z-A</option>
+									<option value="3" checked="">Giá tăng dần</option>
+									<option value="4" checked="">Giá giảm dần</option>
+									<option value="5" checked="">Mới nhất</option>
+									<option value="6" checked="">Cũ nhất</option>
+								</select>
+								<div class="icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										 fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+										<path fill-rule="evenodd"
+											  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708">
+										</path>
+									</svg>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="product-view pb-block" id="load-product">
+						<div class="item-product hover-img">
+							<a href="/tivi-sony-4k-43-inch-kd"
+							   title="Tivi Sony 4K 43 inch KD" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/kd-85x85l/sony80x80l.webp"
+										   alt="Tivi Sony 4K 43 inch KD" width="655" height="655" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-sony-4k-43-inch-kd" target="_self"
+									   title="Tivi Sony 4K 43 inch KD - KD-43X80L">
+										Tivi Sony 4K 43 inch KD -
+										KD-43X80L
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 11,300,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/tivi-sony-4k-50-inch-kd"
+							   title="Tivi Sony 4K 50 inch KD " class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/google-tivi-miniled-sony-4k-85-inch-xr-85x95l-020623-102632-550x34022b222a2c9284511a998aca8e56a9fadresult.webp"
+										   alt="Tivi Sony 4K 50 inch KD " width="550" height="340" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-sony-4k-50-inch-kd" target="_self"
+									   title="Tivi Sony 4K 50 inch KD  - KD-50X80L">
+										Tivi Sony 4K 50 inch KD -
+										KD-50X80L
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 12,650,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/google-tivi-oled-sony-4k-65-inch"
+							   title="Google Tivi OLED Sony 4K 65 inch " class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/55a80l/google-tivi-oled-sony-4k-8.webp"
+										   alt="Google Tivi OLED Sony 4K 65 inch " width="180" height="120" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/google-tivi-oled-sony-4k-65-inch" target="_self"
+									   title="Google Tivi OLED Sony 4K 65 inch  - XR-65A80K">
+										Google Tivi OLED Sony 4K
+										65 inch - XR-65A80K
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 39,400,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/google-tivi-oled-sony-4k-77-inch-xr"
+							   title="GOOGLE TIVI OLED SONY 4K 77 INCH XR" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/55a80l/google-tivi-oled-sony-4k-8.webp"
+										   alt="GOOGLE TIVI OLED SONY 4K 77 INCH XR" width="180" height="120" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/google-tivi-oled-sony-4k-77-inch-xr" target="_self"
+									   title="GOOGLE TIVI OLED SONY 4K 77 INCH XR - XR-77A80K">
+										GOOGLE TIVI OLED SONY 4K
+										77 INCH XR - XR-77A80K
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 76,100,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/google-tivi-oled-sony-4k-48-inch"
+							   title="Google Tivi OLED Sony 4K 48 inch " class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/xr-48a90k/1-41232669-3053-4686-894b-3e1dd03e312aresult.webp"
+										   alt="Google Tivi OLED Sony 4K 48 inch " width="1020" height="680" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/google-tivi-oled-sony-4k-48-inch" target="_self"
+									   title="Google Tivi OLED Sony 4K 48 inch  - XR-48A90K">
+										Google Tivi OLED Sony 4K
+										48 inch - XR-48A90K
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 31,600,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-oled-48-inch-4k-oled48c3psa"
+							   title="Smart Tivi LG OLED 48 Inch 4K OLED48C3PSA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/oled48c3psa/oled48c3p-3.webp"
+										   alt="Smart Tivi LG OLED 48 Inch 4K OLED48C3PSA" width="1024" height="717"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-oled-48-inch-4k-oled48c3psa"
+									   target="_self"
+									   title="Smart Tivi LG OLED 48 Inch 4K OLED48C3PSA - OLED48C3PSA">
+										Smart Tivi LG
+										OLED 48 Inch 4K OLED48C3PSA - OLED48C3PSA
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 30,000,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-qned-75-inch-4k-75qned86sra"
+							   title="Smart Tivi LG QNED 75 Inch 4K 75QNED86SRA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/65qned86sra/lg64qned8610.webp"
+										   alt="Smart Tivi LG QNED 75 Inch 4K 75QNED86SRA" width="600" height="369"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-qned-75-inch-4k-75qned86sra"
+									   target="_self"
+									   title="Smart Tivi LG QNED 75 Inch 4K 75QNED86SRA - 75QNED86SRA">
+										Smart Tivi LG
+										QNED 75 Inch 4K 75QNED86SRA - 75QNED86SRA
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 31,400,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-qned-miniled-8k-75-inch-75qned99tpb"
+							   title="Smart Tivi LG QNED MiniLED 8K 75 inch 75QNED99TPB" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/75qned99tpb/1-jpeg-7c9a971a-a9c6-440d-9420-5b53a3e849ceresult.webp"
+										   alt="Smart Tivi LG QNED MiniLED 8K 75 inch 75QNED99TPB" width="1024" height="680"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-qned-miniled-8k-75-inch-75qned99tpb"
+									   target="_self"
+									   title="Smart Tivi LG QNED MiniLED 8K 75 inch 75QNED99TPB - 75QNED99TPB">
+										Smart
+										Tivi LG QNED MiniLED 8K 75 inch 75QNED99TPB - 75QNED99TPB
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 53,500,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-oled-65-inch-4k-oled65g3psa"
+							   title="Smart Tivi LG OLED 65 Inch 4K OLED65G3PSA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/oled65g3psa/1-jpeg-7c9a971a-a9c6-440d-9420-5b53a3e849ceresultresult.webp"
+										   alt="Smart Tivi LG OLED 65 Inch 4K OLED65G3PSA" width="1024" height="680"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-oled-65-inch-4k-oled65g3psa"
+									   target="_self"
+									   title="Smart Tivi LG OLED 65 Inch 4K OLED65G3PSA - OLED65G3PSA">
+										Smart Tivi LG
+										OLED 65 Inch 4K OLED65G3PSA - OLED65G3PSA
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 58,000,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-oled-83-inch-4k-oled83c3psa"
+							   title="Smart Tivi LG OLED 83 Inch 4K OLED83C3PSA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/oled83c3psa/oled83a3psa-15.webp"
+										   alt="Smart Tivi LG OLED 83 Inch 4K OLED83C3PSA" width="1020" height="680"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-oled-83-inch-4k-oled83c3psa"
+									   target="_self"
+									   title="Smart Tivi LG OLED 83 Inch 4K OLED83C3PSA - OLED83C3PSA">
+										Smart Tivi LG
+										OLED 83 Inch 4K OLED83C3PSA - OLED83C3PSA
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 72,900,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/smart-tivi-lg-oled-77-inch-4k-oled77g3psa"
+							   title="Smart Tivi LG OLED 77 Inch 4K OLED77G3PSA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/oled65g3psa/1-jpeg-7c9a971a-a9c6-440d-9420-5b53a3e849ceresultresult.webp"
+										   alt="Smart Tivi LG OLED 77 Inch 4K OLED77G3PSA" width="1024" height="680"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/smart-tivi-lg-oled-77-inch-4k-oled77g3psa"
+									   target="_self"
+									   title="Smart Tivi LG OLED 77 Inch 4K OLED77G3PSA - OLED77G3PSA">
+										Smart Tivi LG
+										OLED 77 Inch 4K OLED77G3PSA - OLED77G3PSA
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 95,000,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/tivi-lg-smart-oled-8k-88-inch-88z1pta"
+							   title="Tivi LG Smart OLED 8K 88 inch 88Z1PTA" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/lg/inch-88z1pta/lg88z1pa-5result.webp"
+										   alt="Tivi LG Smart OLED 8K 88 inch 88Z1PTA" width="1024" height="1024"
+										   loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-lg-smart-oled-8k-88-inch-88z1pta" target="_self"
+									   title="Tivi LG Smart OLED 8K 88 inch 88Z1PTA - inch-88z1pta">
+										Tivi LG Smart OLED
+										8K 88 inch 88Z1PTA - inch-88z1pta
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 477,000,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/tivi-sony-4k-75-inch-kd-75x77l"
+							   title="Tivi Sony 4K 75 inch KD" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/75x77l/x90l-11679294559result.webp"
+										   alt="Tivi Sony 4K 75 inch KD" width="600" height="500" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-sony-4k-75-inch-kd-75x77l" target="_self"
+									   title="Tivi Sony 4K 75 inch KD -  KD-75X77L">
+										Tivi Sony 4K 75 inch KD -
+										KD-75X77L
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 22,700,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/google-tivi-sony-4k-75-inch-kd-75x85l"
+							   title="Google Tivi Sony 4K 75 inch KD" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/75x85l/4374tivisonykd75x85l10orgresult.webp"
+										   alt="Google Tivi Sony 4K 75 inch KD" width="1020" height="680" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/google-tivi-sony-4k-75-inch-kd-75x85l" target="_self"
+									   title="Google Tivi Sony 4K 75 inch KD - 75X85L">
+										Google Tivi Sony 4K 75 inch KD -
+										75X85L
+									</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 26,400,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/tivi-sony-4k-55-inch-xr-55x90l"
+							   title="Tivi Sony 4K 55 inch XR" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/75x85l/5-8dcdc547-791a-4028-83b6-ba4d3338b31fresult.webp"
+										   alt="Tivi Sony 4K 55 inch XR" width="600" height="336" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-sony-4k-55-inch-xr-55x90l" target="_self"
+									   title="Tivi Sony 4K 55 inch XR - 55X90L">Tivi Sony 4K 55 inch XR - 55X90L</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 22,990,000đ </span></div>
+							</div>
+						</div>
+						<div class="item-product hover-img">
+							<a href="/tivi-sony-4k-85-inch-xr-85x90l"
+							   title="Tivi Sony 4K 85 inch XR" class="img">
+								<div class="over-border">
+									<div class="line"></div>
+									<div class="line line-bottom"></div>
+								</div><img src="/Upload/tivi/sony/75x85l/5-5772dd22-0de4-41cb-adaa-7d8a042b677fresult.webp"
+										   alt="Tivi Sony 4K 85 inch XR" width="600" height="336" loading="lazy">
+							</a>
+							<div class="info">
+								<h3 class="product-name">
+									<a href="/tivi-sony-4k-85-inch-xr-85x90l" target="_self"
+									   title="Tivi Sony 4K 85 inch XR - 85X90L">Tivi Sony 4K 85 inch XR - 85X90L</a>
+								</h3>
+								<div class="price-box"><span class="compare-price"> 48,400,000đ </span></div>
+							</div>
+						</div>
+						<div class="page">
+							<div data-page="1" class="disabled hidden">
+								<svg xmlns="http://www.w3.org/2000/svg"
+									 height="16" width="16" viewBox="0 0 512 512">
+									<path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z">
+									</path>
+								</svg>
+							</div>
+							<div data-page="javascript:" class="disabled hidden">
+								<svg xmlns="http://www.w3.org/2000/svg"
+									 height="16" width="10" viewBox="0 0 320 512">
+									<path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z">
+									</path>
+								</svg>
+							</div><span class="active-page" data-page="0">1</span>
+							<div data-page="2">2</div>
+							<div data-page="3">3</div>
+							<div data-page="4">4</div>
+							<div data-page="2">
+								<svg xmlns="http://www.w3.org/2000/svg" height="16" width="10"
+									 viewBox="0 0 320 512">
+									<path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z">
+									</path>
+								</svg>
+							</div>
+							<div data-page="12">
+								<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+									 viewBox="0 0 512 512">
+									<path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z">
+									</path>
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

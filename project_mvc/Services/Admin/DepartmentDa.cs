@@ -46,13 +46,13 @@ namespace project_mvc.Services.Admin
 				using SqlConnection connect = DapperDA.GetOpenConnection();
 				if (search != null && !string.IsNullOrEmpty(search.Keyword))
 				{
-					var result = connect.Query<DepartmentItem>("SELECT * FROM Departments WHERE IsDeleted = 0 AND DepartmentName LIKE N'%' + @key + '%' ESCAPE N'~' ORDER BY  Id DESC", new { @key = Utility.CharacterSpecail(search.Keyword) });
+					var result = connect.Query<DepartmentItem>("SELECT COUNT(ID) OVER () as TotalRecords, [Id],[Name],[OrderDisplay] FROM Departments WHERE IsDeleted = 0 AND Name LIKE N'%' + @Keyword + '%' ESCAPE N'~' ORDER BY  Id DESC", new { @Keyword = Utility.CharacterSpecail(search.Keyword) });
 					await connect.CloseAsync();
 					return result.ToList();
 				}
 				else
 				{
-					var result = connect.Query<DepartmentItem>("SELECT * FROM Departments WHERE IsDeleted = 0 ORDER BY Id DESC");
+					var result = connect.Query<DepartmentItem>("SELECT COUNT(ID) OVER () as TotalRecords, [Id],[Name],[OrderDisplay] FROM Departments WHERE IsDeleted = 0 ORDER BY Id DESC");
 					await connect.CloseAsync();
 					return result.ToList();
 				}
@@ -68,7 +68,7 @@ namespace project_mvc.Services.Admin
 			try
 			{
 				using SqlConnection connect = DapperDA.GetOpenConnection();
-				var result = await connect.QueryAsync<Departments>("SELECT * FROM Departments WHERE IsDeleted = 0 AND ID=@id", new { id });
+				var result = await connect.QueryAsync<Departments>("SELECT * FROM Departments WHERE IsDeleted = 0 AND Id=@id", new { id });
 				await connect.CloseAsync();
 				return result?.FirstOrDefault();
 			}
@@ -80,12 +80,12 @@ namespace project_mvc.Services.Admin
 		}
 
 		[Obsolete]
-		public async Task<bool> CheckDepartment(string department)
+		public async Task<bool> CheckDepartment(string name)
 		{
 			try
 			{
 				using SqlConnection connect = DapperDA.GetOpenConnection();
-				var result = await connect.QueryAsync<Departments>("SELECT Id FROM Departments WHERE IsDeleted = 0 AND DepartmentName=@department", new { department });
+				var result = await connect.QueryAsync<Departments>("SELECT Id FROM Departments WHERE IsDeleted = 0 AND Name=@name", new { name });
 				await connect.CloseAsync();
 				return result != null && result.Any();
 			}

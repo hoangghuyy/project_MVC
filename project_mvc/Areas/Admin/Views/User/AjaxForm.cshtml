@@ -5,6 +5,7 @@
 }
 
 
+
 <div>
 	<div class="card">
 		<form id="form-action" class="card-header">
@@ -48,10 +49,11 @@
 										<div class="mb-3">
 											<label for="DepartmentId" class="form-label">Phòng ban</label>
 											<select name="DepartmentId" id="DepartmentId" class="form-select mb-3" aria-label=".form-select example">
-												@foreach (var item in Model.ListDepartment)
+												<option value="">-- Chọn --</option>
+												@foreach (var item in Model.ListDepartment!)
 												{
 													<option value="@item.Id" @(item.Id == Model.Item.DepartmentId ? " selected" : "")>
-														@item.DepartmentName
+														@item.Name
 													</option>
 												}
 											</select>
@@ -78,9 +80,10 @@
 	</div>
 </div>
 
+
+
 <script>
 	$(document).ready(function () {
-		handleAction();
 
 		var form = $("#form-action");
 
@@ -109,6 +112,7 @@
 				}
 			}
 		});
+		
 
 		$('#form-action').submit(function (e) {
 			e.preventDefault();
@@ -134,6 +138,12 @@
 
 			return false;
 		});
+		$('.btn-back').on("click", function () {
+			loadAjaxForm(urlListItem, "#loadGridView");
+			$('#loadGridView').show();
+			$('#AjaxForm').html('');
+		});
+	
 	});
 
 

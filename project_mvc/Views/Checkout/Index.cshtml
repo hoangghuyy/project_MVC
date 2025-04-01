@@ -1,0 +1,319 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app">
+    <section>
+        <div class="middleCart">
+            <div class="alertsuccess">
+                <img width="48" height="48" src="https://img.icons8.com/pulsar-gradient/48/order-completed.png" alt="order-completed" />
+                <strong>Đặt hàng thành công</strong>
+            </div>
+            <div class="ordercontent">
+                <p>
+                    Cảm ơn <b id="customerName"></b> đã cho CT Luxhome cơ hội được phục vụ. Trong 15 phút, nhân viên CT
+                    Luxhome sẽ <b>gọi điện hoặc gửi tin nhắn xác nhận giao hàng</b> cho bạn.
+                </p>
+                <div class="info-order">
+                    <h4 id="orderCodeDisplay">ĐƠN HÀNG #</h4>
+                    <label>
+                        <i></i><span id="customerInfoDisplay"></span>
+                    </label>
+                    <label>
+                        <i></i><span id="deliveryAddressDisplay"></span>
+                    </label>
+                    <label> <i></i><span id="deliveryTimeDisplay"></span> </label>
+                    <label>
+                        <i></i><span id="deliveryMethodDisplay"></span>
+                    </label>
+                    <label>
+                        <i></i> <span id="estimatedDeliveryDisplay"></span>
+                    </label>
+                    <label>
+                        <i></i><span id="totalAmountDisplay"></span>
+                    </label>
+                </div>
+                <div id="paymentTypeT">
+                    <h3>Chọn hình thức thanh toán:</h3>
+                    <ul class="formality-pay">
+                        <li class="qrcode">
+                            <a href="javascript:void(0)" id="cashOnDeliveryBtn" data-code="3">
+                                <span>
+                                    Cash
+                                    <b>on Delivery</b>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="qrcode">
+                            <a href="javascript:void(0)" id="vnpayBtn" data-code="3">
+                                <span>
+                                    Payment via
+                                    <b>VNPAY</b>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cancel-order">
+                    <a href="javascript:" onclick="cancelOrder()" class="cancel-order__cancel-button">Hủy đơn hàng</a>
+                </div>
+                <div class="box-order" id="orderItemsContainer">
+                    <!-- Order items will be populated here -->
+                </div>
+                <div name="refund-popup">
+                    <p><a class="refund-policy" href="javascript:void(0)">Xem chính sách hoàn tiền online</a></p>
+                    <div class="popup-hoantien">
+                        <div class="bg-hoantien">&nbsp;</div>
+                        <div class="hoantienonline">
+                            <div class="row-ht">
+                                <strong>Chính sách hoàn tiền khi thanh toán Online</strong> <a href="javascript:">Đóng</a>
+                            </div>
+                            <p>
+                                Trong trường hợp quý khách hàng đã mua hàng &amp; thanh toán trực tuyến thành công nhưng dư tiền, hoặc
+                                trả sản phẩm, CTLuxHome sẽ hoàn tiền vào thẻ quý khách đã dùng để thanh toán, theo thời hạn như sau:
+                            </p>
+                            <p>
+                                - Đối với thẻ ATM: Thời gian khách hàng nhận được tiền hoàn từ 7-10 ngày (trừ thứ 7, chủ nhật và ngày
+                                lễ). Nếu qua thời gian trên không nhận được tiền, CTLuxHome sẽ hỗ trợ liên hệ ngân hàng của khách hàng
+                                để giải quyết.
+                            </p>
+                            <p>
+                                - Đối với thẻ Visa/Master card/JCB: Thời gian Khách hàng nhận được tiền hoàn 7-15 ngày. Nếu qua thời
+                                gian trên khách hàng không nhận được tiền, khách hàng liên hệ ngân hàng để giải quyết.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <a href="/" class="buyanother"> Mua thêm sản phẩm khác </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy thông tin đơn hàng từ localStorage
+        const orderData = JSON.parse(localStorage.getItem('orderData'));
+        const orderCode = localStorage.getItem('currentOrderCode');
+        const refundPolicyLink = document.querySelector('.refund-policy');
+        const popupHoantien = document.querySelector('.popup-hoantien');
+        const closePopupBtn = popupHoantien.querySelector('.row-ht a');
+        const bgHoantien = popupHoantien.querySelector('.bg-hoantien');
+
+        if (!orderData || !orderCode) {
+            // Nếu không có dữ liệu đơn hàng, chuyển hướng về trang giỏ hàng
+            window.location.href = '/Cart';
+            return;
+        }
+
+        // Hiển thị thông tin đơn hàng
+        displayOrderInfo(orderData, orderCode);
+
+        // Xử lý sự kiện khi chọn phương thức thanh toán
+        document.getElementById('cashOnDeliveryBtn').addEventListener('click', function () {
+            selectPaymentMethod('cash');
+        });
+
+        document.getElementById('vnpayBtn').addEventListener('click', function () {
+            selectPaymentMethod('vnpay');
+        });
+
+        // Show popup when clicking "Xem chính sách hoàn tiền online"
+        refundPolicyLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            popupHoantien.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
+        });
+
+        // Close popup when clicking close button
+        closePopupBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            closePopup();
+        });
+
+        // Close popup when clicking on background
+        bgHoantien.addEventListener('click', function () {
+            closePopup();
+        });
+
+        // Close popup when pressing ESC key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && popupHoantien.style.display === 'block') {
+                closePopup();
+            }
+        });
+
+        // Function to close popup
+        function closePopup() {
+            popupHoantien.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    });
+
+    function displayOrderInfo(orderData, orderCode) {
+        // Hiển thị mã đơn hàng
+        document.getElementById('orderCodeDisplay').textContent = `ĐƠN HÀNG #${orderCode}`;
+
+        // Hiển thị thông tin khách hàng
+        const customerName = `${orderData.customerInfo.gender} ${orderData.customerInfo.fullName}`;
+        document.getElementById('customerName').textContent = customerName;
+
+        let customerInfo = `<strong>Người nhận hàng: </strong> ${customerName}, ${orderData.customerInfo.phone}`;
+        if (orderData.customerInfo.email) {
+            customerInfo += `, ${orderData.customerInfo.email}`;
+        }
+        document.getElementById('customerInfoDisplay').innerHTML = customerInfo;
+
+        // Hiển thị địa chỉ giao hàng
+        let deliveryAddress = `<strong>Giao đến: </strong> ${orderData.deliveryInfo.address}`;
+        // (Trong thực tế, bạn sẽ cần lấy tên tỉnh/thành, quận/huyện từ ID)
+        deliveryAddress += ` (nhân viên sẽ gọi xác nhận trước khi giao).`;
+        document.getElementById('deliveryAddressDisplay').innerHTML = deliveryAddress;
+
+        // Hiển thị thời gian giao hàng
+        document.getElementById('estimatedDeliveryDisplay').innerHTML =
+            `<strong>Thời gian nhận hàng dự kiện: </strong> ${orderData.deliveryInfo.estimatedDelivery}`;
+
+        // Hiển thị phương thức giao hàng
+        const deliveryMethod = orderData.deliveryInfo.deliveryType === "Express" ?
+            "Giao hỏa tốc" : "Giao thông thường";
+        document.getElementById('deliveryMethodDisplay').innerHTML =
+            `<strong>Cách thức nhận hàng: </strong> ${deliveryMethod}`;
+
+        // Hiển thị thời gian nhận hàng
+        document.getElementById('deliveryTimeDisplay').innerHTML =
+            `<strong>Thời gian nhận hàng: </strong> Giờ hành chính`;
+
+        // Hiển thị sản phẩm trong đơn hàng và tính tổng tiền
+        displayOrderItems(orderData.cart);
+    }
+
+    function displayOrderItems(cartItems) {
+        const container = document.getElementById('orderItemsContainer');
+        let itemsHTML = '<ul>';
+        let subtotal = 0;
+        let savings = 0;
+
+        cartItems.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            const itemOldTotal = item.priceOld > 0 ? item.priceOld * item.quantity : itemTotal;
+
+            subtotal += itemTotal;
+            if (item.priceOld > 0) {
+                savings += (item.priceOld - item.price) * item.quantity;
+            }
+
+            itemsHTML += `
+                    <ul>
+                        <li>
+                            <a href="${item.nameAscii || '#'}" target="_blank" class="img-order">
+                                <img src="${item.image}" alt="${item.name}" width="80" height="80" loading="lazy">
+                            </a>
+                            <div class="text-order">
+                                <a href="${item.nameAscii || '#'}" target="_blank" class="text-order__product-name">${item.name}</a>
+                                <div class="amount-color">
+                                    <small>
+                                        Giá: <span>${formatPrice(item.price)}đ</span>
+                                        ${item.priceOld > 0 ? `<span style="text-decoration:line-through">${formatPrice(item.priceOld)}đ</span>` : ''}
+                                    </small>
+                                    <small>Số lượng: ${item.quantity}</small>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                `;
+        });
+
+        itemsHTML += '</ul>';
+
+        // Thêm thông tin tổng tiền
+        itemsHTML += `
+                <div class="lastrow"><small>Tổng phụ:</small><small>${formatPrice(subtotal)}đ</small></div>
+                ${savings > 0 ? `<div class="lastrow"><small>Tiết kiệm:</small><small>- ${formatPrice(savings)}đ</small></div>` : ''}
+                <div class="lastrow"><small>Phí vận chuyển:</small><small>Liên hệ</small></div>
+                <div class="lastrow"><small>Tổng tiền:</small><small>${formatPrice(subtotal)}đ</small></div>
+            `;
+
+        container.innerHTML = itemsHTML;
+
+        // Hiển thị tổng tiền trong phần thông tin đơn hàng
+        document.getElementById('totalAmountDisplay').innerHTML =
+            `<strong>Tổng tiền: </strong> <b> ${formatPrice(subtotal)}đ <span class="notpaid">(Đơn hàng chưa thanh toán)</span> </b>`;
+    }
+
+    function selectPaymentMethod(method) {
+        const cashBtn = document.getElementById('cashOnDeliveryBtn');
+        const vnpayBtn = document.getElementById('vnpayBtn');
+
+        if (method === 'cash') {
+            // Ẩn nút VNPAY và thay đổi nút Cash on Delivery
+            vnpayBtn.style.display = 'none';
+            cashBtn.innerHTML = '<span>Hoàn tất thanh toán</span>';
+
+            // Thay đổi sự kiện click để hoàn tất thanh toán
+            cashBtn.onclick = function () {
+                completePayment('cash');
+            };
+        } else if (method === 'vnpay') {
+            // Ẩn nút Cash on Delivery và thay đổi nút VNPAY
+            cashBtn.style.display = 'none';
+            vnpayBtn.innerHTML = '<span>Hoàn tất thanh toán</span>';
+
+            // Thay đổi sự kiện click để hoàn tất thanh toán
+            vnpayBtn.onclick = function () {
+                completePayment('vnpay');
+            };
+        }
+    }
+
+    function completePayment(method) {
+        // Lấy thông tin đơn hàng
+        const orderData = JSON.parse(localStorage.getItem('orderData'));
+        const orderCode = localStorage.getItem('currentOrderCode');
+
+        // Gửi thông báo nếu được chọn
+        if (orderData.customerInfo.notifications.includes('Phone')) {
+            // Gửi SMS (trong thực tế sẽ gọi API)
+            console.log(`Đã gửi SMS thông báo đơn hàng #${orderCode} đến số ${orderData.customerInfo.phone}`);
+        }
+
+        if (orderData.customerInfo.notifications.includes('Email') && orderData.customerInfo.email) {
+            // Gửi email (trong thực tế sẽ gọi API)
+            console.log(`Đã gửi email thông báo đơn hàng #${orderCode} đến ${orderData.customerInfo.email}`);
+        }
+
+        // Hiển thị thông báo thanh toán thành công
+        alert(`Thanh toán đơn hàng #${orderCode} bằng ${method === 'cash' ? 'tiền mặt khi nhận hàng' : 'VNPAY'} thành công!`);
+
+        // Xóa giỏ hàng sau khi thanh toán thành công
+        localStorage.removeItem('cart');
+        localStorage.removeItem('orderData');
+        localStorage.removeItem('currentOrderCode');
+
+        // Cập nhật số lượng giỏ hàng
+        updateCartCount();
+    }
+
+    function cancelOrder() {
+        if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+            // Xóa thông tin đơn hàng tạm thời
+            localStorage.removeItem('orderData');
+            localStorage.removeItem('currentOrderCode');
+
+            // Chuyển hướng về trang chủ
+            window.location.href = '/';
+        }
+    }
+
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        document.querySelectorAll('#cart-count, #cart-count-bottom').forEach(element => {
+            element.textContent = totalItems;
+        });
+    }
+</script>
