@@ -1,0 +1,335 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="wrapper_cart">
+    <div class="container">
+        <h1 class="title-cart">Thanh toán</h1>
+        <form id="SendOrder" method="post" novalidate="novalidate" action="/Checkout/ProcessOrder">
+            <div class="grid_cart">
+                <div class="left">
+                    <input type="hidden" id="vouchercodef" name="vouchercode">
+                    <div class="infor-customer">
+                        <h4>Thông tin khách hàng:</h4>
+                        <div class="form-group">
+                            <div class="gt-norn">
+                                <label class="radio-inline">
+                                    Anh <input type="radio" value="Anh" name="gen" checked="checked">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    Chị <input type="radio" value="Chị" name="gen">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group group-5">
+                            <input class="form-control" placeholder="Họ và tên (*)" name="fullname" id="fullnamepayment" required>
+                        </div>
+                        <div class="form-group group-5">
+                            <input class="form-control" placeholder="Số điện thoại (*)" name="paymentmobile" id="paymentmobile" required>
+                        </div>
+                        <div class="form-group group-10">
+                            <input type="email" class="form-control" placeholder="Email" name="paymentemail" id="paymentemail">
+                        </div>
+                        <div class="form-group group-10">
+                            <div class="type-notification">
+                                <label class="checkbox-inline" for="NotiSDT">
+                                    Nhận thông tin đơn hàng qua SĐT
+                                    <input type="checkbox" value="Phone" id="NotiSDT" name="typenotification">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="checkbox-inline" for="NotiEmail">
+                                    Nhận thông tin đơn hàng qua Email
+                                    <input type="checkbox" value="Email" id="NotiEmail" name="typenotification">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="infor-customer choosegetgoods">
+                        <h4>Điền thông tin nhận hàng:</h4>
+                        <div class="click-choose">
+                            <div data-tab="tab-1" class="choose-link active current" onclick="selectPaymentReceive(1,$(this))">
+                                <i class="cartnew-choose"></i> <span>Giao tận nơi</span>
+                            </div>
+                        </div>
+                        <div id="tab-1" class="choose-content current">
+                            <div class="deli-address">
+                                <div class="active">
+                                    <p>Chọn địa chỉ để biết thời gian nhận hàng và phí vận chuyển (nếu có)</p>
+                                    <div class="form-group group-5">
+                                        <select class="form-control" name="CityID" id="CityID" required>
+                                            <option value="">Chọn Tỉnh/TP</option>
+                                            <option value="1">Hà Nội</option>
+                                            <option value="2">Hồ Chí Minh</option>
+                                            <option value="3">Đà Nẵng</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group group-5">
+                                        <select class="form-control" name="DistrictID" id="DistrictID" required>
+                                            <option value="">Chọn Quận(huyện)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group group-5">
+                                        <select class="form-control" name="WardID" id="WardID">
+                                            <option value="">Chọn Phường(Xã)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group group-5">
+                                        <input class="form-control" name="paymentadd" id="addr" placeholder="Số nhà, tên đường" required>
+                                    </div>
+                                    <p>Vận chuyển</p>
+                                    <div class="form-group">
+                                        <div class="gt-norn">
+                                            <label class="radio-inline delivery-default">
+                                                Thông thường
+                                                <input type="radio" value="None" id="DeliveryNone" name="TypeDelivery" checked>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-inline delivery-express">
+                                                Giao hỏa tốc 2-4h
+                                                <input type="radio" value="Express" id="DeliveryExpress" name="TypeDelivery">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="anotheroption">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <input class="form-control" id="note" name="note" placeholder="Yêu cầu khác (không bắt buộc)">
+                        </div>
+                        <div class="typereceive">
+                            <p class="time-receive-default">Thời gian nhận hàng dự kiến: <span id="estimatedDeliveryDate"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="giohang">
+                        <p class="title-right-cart">Giỏ hàng</p>
+                        <div id="Cart" class="flex-card"></div>
+                    </div>
+                    <div class="donhang">
+                        <p class="title-right-cart">Đơn hàng</p>
+                        <div class="area-total">
+                            <div id="Total">
+                                <div class="total-provisional"><span>Tổng phụ: </span><span>0đ</span></div>
+                                <div class="total-provisional"><span>Tiết kiệm: </span><span>0đ</span></div>
+                                <div class="total-provisional"><span>Vận chuyển: </span><span>Liên hệ</span></div>
+                                <div class="total-provisional"><strong>Tổng tiền:</strong><span>0đ</span></div>
+                            </div>
+                            <div class="discountcode">
+                                <div class="usecode"><i class="cartnew-discount"></i> <span>Sử dụng mã giảm giá</span></div>
+                            </div>
+                            <div class="accept_rules">
+                                <label for="accept_rules">
+                                    <input type="checkbox" value="true" name="accept_rules" id="accept_rules">
+                                    Tôi đồng ý với <a href="/quy-dinh-chinh-sach" title="Điều khoản và điều kiện">Điều khoản và điều kiện</a>
+                                </label>
+                            </div>
+                            <div class="act_cart">
+                                <button class="payment" title="Thanh toán" disabled>Thanh toán</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Hàm định dạng giá tiền
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Hàm cập nhật số lượng trên icon giỏ hàng
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        document.querySelectorAll('#cart-count, #cart-count-bottom').forEach(element => {
+            element.textContent = totalItems;
+        });
+    }
+
+    // Hàm xóa sản phẩm khỏi giỏ hàng
+    function removeFromCart(index) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+        updateCartCount();
+        calculateEstimatedDelivery();
+    }
+
+    // Hàm cập nhật số lượng sản phẩm
+    function updateQuantity(index, newQuantity) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (newQuantity > 0) {
+            cart[index].quantity = parseInt(newQuantity);
+        } else {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+        updateCartCount();
+        calculateEstimatedDelivery();
+    }
+
+    // Hàm tính toán thời gian nhận hàng dự kiến
+    function calculateEstimatedDelivery() {
+        const today = new Date();
+        const deliveryType = document.querySelector('input[name="TypeDelivery"]:checked').value;
+
+        let deliveryDays = 3; // Mặc định 3 ngày cho giao thông thường
+        if (deliveryType === "Express") {
+            deliveryDays = 1; // 1 ngày cho giao hỏa tốc
+        }
+
+        // Thêm ngày giao hàng
+        const deliveryDate = new Date(today);
+        deliveryDate.setDate(deliveryDate.getDate() + deliveryDays);
+
+        // Định dạng ngày tháng
+        const day = deliveryDate.getDate().toString().padStart(2, '0');
+        const month = (deliveryDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = deliveryDate.getFullYear();
+
+        document.getElementById('estimatedDeliveryDate').textContent = `${day}/${month}/${year}`;
+    }
+
+    // Hàm hiển thị giỏ hàng
+    function displayCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartContainer = document.getElementById('Cart');
+        const totalContainer = document.getElementById('Total');
+
+        let cartHTML = '';
+        let subtotal = 0;
+        let savings = 0;
+
+        cart.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            const itemOldTotal = item.priceOld > 0 ? item.priceOld * item.quantity : itemTotal;
+
+            subtotal += itemTotal;
+            if (item.priceOld > 0) {
+                savings += (item.priceOld - item.price) * item.quantity;
+            }
+
+            cartHTML += `
+                    <div class="product-item">
+                        <div class="imgsp">
+                            <div class="avatar">
+                                <img src="${item.image}" alt="${item.name}">
+                                <div class="delete_cart" onclick="removeFromCart(${index})">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="infor_p">
+                                <a href="${item.nameAscii || '#'}" target="_blank" class="name-price">
+                                    ${item.name}<br>Sku: ${item.sku || 'N/A'}
+                                </a>
+                                <div class="quantity_price">
+                                    <div class="quality_cart">
+                                        <span>SL: </span>
+                                        <ul class="box-tab-sl pickamct">
+                                            <li>
+                                                <input class="number" min="1" type="number"
+                                                       value="${item.quantity}"
+                                                       onchange="updateQuantity(${index}, this.value)">
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="price_cart">
+                                        <span>${formatPrice(item.price * item.quantity)}đ</span>
+                                        ${item.priceOld > 0 ? `<span class="old">${formatPrice(item.priceOld * item.quantity)}đ</span>` : ''}
+                                        <span class="vat">(Giá đã bao gồm VAT)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        });
+
+        cartContainer.innerHTML = cartHTML;
+
+        totalContainer.innerHTML = `
+                <div class="total-provisional"><span>Tổng phụ: </span><span>${formatPrice(subtotal)}đ</span></div>
+                ${savings > 0 ? `<div class="total-provisional"><span>Tiết kiệm: </span><span>${formatPrice(savings)}đ</span></div>` : ''}
+                <div class="total-provisional"><span>Vận chuyển: </span><span>Liên hệ</span></div>
+                <div class="total-provisional"><strong>Tổng tiền:</strong><span>${formatPrice(subtotal)}đ</span></div>
+            `;
+    }
+
+    // Khi trang được tải
+    document.addEventListener('DOMContentLoaded', function () {
+        displayCart();
+        updateCartCount();
+        calculateEstimatedDelivery();
+
+        // Kiểm tra nút thanh toán
+        const acceptCheckbox = document.getElementById('accept_rules');
+        const paymentButton = document.querySelector('.payment');
+
+        if (acceptCheckbox && paymentButton) {
+            acceptCheckbox.addEventListener('change', function () {
+                paymentButton.disabled = !this.checked;
+            });
+        }
+
+        // Tính toán lại thời gian giao hàng khi thay đổi phương thức vận chuyển
+        document.querySelectorAll('input[name="TypeDelivery"]').forEach(radio => {
+            radio.addEventListener('change', calculateEstimatedDelivery);
+        });
+
+        // Xử lý khi submit form
+        document.getElementById('SendOrder').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Lấy thông tin từ form
+            const formData = {
+                customerInfo: {
+                    gender: document.querySelector('input[name="gen"]:checked').value,
+                    fullName: document.getElementById('fullnamepayment').value,
+                    phone: document.getElementById('paymentmobile').value,
+                    email: document.getElementById('paymentemail').value,
+                    notifications: []
+                },
+                deliveryInfo: {
+                    city: document.getElementById('CityID').value,
+                    district: document.getElementById('DistrictID').value,
+                    ward: document.getElementById('WardID').value,
+                    address: document.getElementById('addr').value,
+                    deliveryType: document.querySelector('input[name="TypeDelivery"]:checked').value,
+                    note: document.getElementById('note').value,
+                    estimatedDelivery: document.getElementById('estimatedDeliveryDate').textContent
+                },
+                cart: JSON.parse(localStorage.getItem('cart')) || [],
+                acceptTerms: document.getElementById('accept_rules').checked
+            };
+
+            // Thêm thông báo nếu được chọn
+            if (document.getElementById('NotiSDT').checked) {
+                formData.customerInfo.notifications.push('Phone');
+            }
+            if (document.getElementById('NotiEmail').checked) {
+                formData.customerInfo.notifications.push('Email');
+            }
+
+            // Lưu thông tin đơn hàng vào localStorage để sử dụng ở trang checkout
+            localStorage.setItem('orderData', JSON.stringify(formData));
+
+            // Tạo mã đơn hàng ngẫu nhiên
+            const orderCode = 'CTL' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('currentOrderCode', orderCode);
+
+            // Chuyển hướng sang trang checkout
+            window.location.href = '/Checkout/Index';
+        });
+    });
+</script>

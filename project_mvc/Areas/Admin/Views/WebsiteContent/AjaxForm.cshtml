@@ -1,0 +1,298 @@
+﻿@model project_mvc.Areas.Admin.ViewModels.WebsiteContentViewModel
+
+@{
+	Layout = null;
+
+}
+
+<div>
+	<div class="card">
+
+		<form id="form-action" class="card-header">
+			@if (ViewBag.Action == "Edit")
+			{
+				<input type="hidden" name="Id" value="@Model.Item.Id" />
+			}
+			<input type="hidden" name="Action" value="@ViewBag.Action" />
+			<div class="header-title">
+				<nav class="d-flex justify-content-between">
+					<div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+						<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tổng quan</button>
+						<button class="nav-link" id="nav-module-tab" data-bs-toggle="tab" data-bs-target="#nav-module" type="button" role="tab" aria-controls="nav-module" aria-selected="false">Danh mục</button>
+						<button class="nav-link" id="nav-content-tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="nav-content" aria-selected="false">Nội dung</button>
+
+					</div>
+					<div class="d-flex nav nav-tabs">
+						<button type="submit" class="btn btn-primary nav-link active"
+								style="margin-right:15px">
+							@ViewBag.ActionText
+						</button>
+						<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div class="row">
+									<div class="">
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2">Tiêu đề</label>
+											<input type="text" class="form-control"
+												   value="@Model.Item.Name" placeholder="@Model.Item.Name " id="Name" name="Name" ">
+										</div>
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="lname">Link</label>
+											<input type="text" class="form-control valid" name="Title" id="Title"
+												   value="@Model.Item.Title" placeholder="@Model.Item.Title" />
+										</div>
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="lname">Url</label>
+											@{
+												var codeNameAscii = "";
+												var nameAscii = Model.Item.NameAscii;
+											}
+											<input type="text" class="form-control link" id="NameAscci" name="NameAscii" value="@Model.Item.NameAscii" placeholder="@Model.Item.NameAscii" />
+											<input type="hidden" class="form-control" id="CodeNameAscii" name="CodeNameAscii" value="@codeNameAscii" />
+										</div>
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="lname">Link Redirect</label>
+											<input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.Item.LinkUrl" placeholder="@Model.Item.LinkUrl" />
+										</div>
+										<div class="form-group d-flex col-12" style="justify-content: space-between">
+											<div class="form-group d-flex col-5" style="align-items:center">
+												<label class="col-3" for="fname">Ngày tạo</label>
+												<div class="input-group">
+													<input type="text" id="CreatedDate" autocomplete="off" value="@Model.Item.CreatedDate" class="form-control dateddmmyyy">
+													<div class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</div>
+												</div>
+											</div>
+											<div class="form-group d-flex col-6" style="align-items:center">
+												<label class="col-4" for="fname">Ngày xuất bản</label>
+												<div class="input-group">
+													<input type="text" id="PublishDate" autocomplete="off" value="@Model.Item.PublishDate" class="form-control dateddmmyyy">
+													<div class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group d-flex col-8">
+											<div class="form-group col-4 d-flex me-2" style="align-items:center">
+												<label class="col-md-3" for="add1">Thứ tự</label>
+												<input type="number" class="form-control" id="OrderDisplay" name="OrderDisplay">
+											</div>
+											@if (ViewBag.Action == "Add")
+											{
+												<div class="col-sm-3" style="margin-right:20px">
+													<label>Hiển thị</label>
+													<label>
+														<input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Item.IsShow == false) ? "" : "checked") />
+														<input type="hidden" name="IsShow" value="false" />
+													</label>
+												</div>
+											}
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1">
+												<label>Ảnh đại diện</label>
+											</div>
+											<div class="col-sm-11 changeUrlTinyMceParent">
+												<div class="input-group">
+													<input type="text" class="changeUrlTinyMce link form-control" id="Avatar" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.Item.UrlPicture" />
+													<span class="input-group-addon" style="background:transparent;padding-right:10px;">
+														<button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
+													</span>
+												</div>
+												<div id="AddAvatar">
+													<table class="removeParent text-center @(string.IsNullOrEmpty(Model.Item.UrlPicture) ? "no-border" : string.Empty)">
+														<tbody>
+															<tr>
+																<td>
+																	<img style="max-width:100px;max-height:100px;" src="@(!string.IsNullOrEmpty(Model.Item.UrlPicture) ? Model.Item.UrlPicture : string.Empty)">
+																	<input type="hidden" name="UrlPicture" value="@Model.Item.UrlPicture">
+																	<a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-module" role="tabpanel" aria-labelledby="nav-module-tab">
+						<div class="card-body">
+							<div class="row">
+								<div class="">
+									<div class="form-group d-flex" style="align-items:center">
+										<div class="col-sm-1">
+											<label> Module chính</label>
+										</div>
+										<div class="col-sm-11">
+											<select name="ModuleNameAscii" id="ModuleNameAsciiIds" class="form-control category-main" data-container="body" data-live-search="true" title="-- Danh mục chính --" data-hide-disabled="true">
+												<option value="">-- Chọn</option>
+											@if (Model.ListModuleContent != null && Model.ListModuleContent.Any())
+											{
+												foreach (var parent in Model.ListModuleContent.Where(x => x.ParentId == 0).OrderBy(x => x.OrderDisplay))
+												{
+														<option data-id="@parent.Id" value="@parent.NameAscii" @(!string.IsNullOrEmpty(parent.NameAscii) && string.IsNullOrEmpty(parent.LinkUrl) && Model.Item.ModuleNameAscii == parent.NameAscii ? "selected" : string.Empty)>@parent.Name - @parent.ModuleTypeCode</option>
+													foreach (var child in Model.ListModuleContent.Where(x => x.ParentId == parent.Id).OrderBy(x => x.OrderDisplay))
+													{
+															<option data-id="@child.Id" value="@child.NameAscii" @(!string.IsNullOrEmpty(child.NameAscii) && string.IsNullOrEmpty(child.LinkUrl) && Model.Item.ModuleNameAscii == child.NameAscii ? "selected" : string.Empty)>- @child.Name - @child.ModuleTypeCode</option>
+														foreach (var module in Model.ListModuleContent.Where(x => x.ParentId == child.Id).OrderBy(x => x.OrderDisplay))
+														{
+																<option data-id="@module.Id" value="@module.NameAscii" @(!string.IsNullOrEmpty(module.NameAscii) && string.IsNullOrEmpty(module.LinkUrl) && Model.Item.ModuleNameAscii == module.NameAscii ? "selected" : string.Empty)>-- @module.Name - @module.ModuleTypeCode</option>
+														}
+													}
+												}
+											}
+											</select>
+										</div>
+									</div>
+									<div class="form-group" style="display: none">
+										<div class="col-sm-2">
+											<label>Danh mục đã chọn</label>
+										</div>
+										<div class="col-sm-10">
+											<input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@Model.Item.ModuleIds" />
+											<div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600;">
+											@string.Join(",", Model.ListModuleContent!.Select(c => c.Name))
+											</div>
+											<input type="hidden" name="ModuleNameAsciiNew" id="Value_ModuleNameAscii" value="@Model.Item.ModuleNameAscii" />
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-12">
+											<div id="LoadGridModule"></div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-content" role="tabpanel" aria-labelledby="nav-content-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div class="row">
+									<div class="form-group d-flex col-sm-12">
+										<div class="col-sm-1">
+											<label>Mô tả</label>
+										</div>
+										<div class="col-sm-11">
+											<textarea rows="10" id="Description" name="Description" class="form-control textarea">@Model.Item.Description</textarea>
+										</div>
+									</div>
+									<div class="form-group d-flex col-sm-12">
+										<div class="col-sm-1">
+											<label>Mô tả</label>
+										</div>
+										<div class="col-sm-11">
+											<textarea rows="10" id="Content" name="Content" class="form-control textarea">@Model.Item.Description</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<style>
+	.label-check [type="checkbox"]:not(:checked) + label:before, .label-check [type="checkbox"]:checked + label:before {
+		margin: auto;
+		width: 3em;
+		height: 3em;
+		border: 1px solid #ccc;
+		background: #fff;
+		border-radius: 2px;
+		box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+	}
+
+	.label-check [type="checkbox"]:not(:checked) + label:after {
+		opacity: 0;
+		transform: scale(0);
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		font-size: 1.3em;
+		line-height: 0.8;
+		color: #03A9F4;
+		transition: all .2s;
+		font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;
+	}
+</style>
+<script>
+	$(document).ready(function () {
+		LoadCKEDITOR('Description', true, 200);
+		LoadCKEDITOR('Content', true, 400);
+		var form = $("#form-action");
+
+		// Khởi tạo validate
+		form.validate({
+			rules: {
+				Name: {
+					required: true
+				}
+			},
+			messages: {
+				Name: {
+					required: "Tên Module bắt buộc nhập."
+				}
+			}
+		});
+
+		$('#form-action').submit(function (e) {
+			e.preventDefault();
+			var formData = $(this).serialize();
+			// updateEditor();
+			$.ajax({
+				url: '/AdminCms/WebsiteContent/Action',
+				type: 'POST',
+				data: formData,
+				success: function (response) {
+					showMessage(response.message, "success");
+					$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+				},
+				error: function (xhr, status, error) {
+					showMessage(error.message, "error");
+				}
+			});
+
+			return false;
+		});
+		$('.btn-back').on("click", function () {
+			loadAjaxForm(urlListItem, "#loadGridView");
+			$('#loadGridView').show();
+			$('#AjaxForm').html('');
+		});
+		let ModuleNameAsciiId = '';
+		let moduleSelectedAll = '';
+		let listmodule = replaceCommaFirstEnd($("#Value_ModuleValues").val());
+		$('#ModuleNameAsciiIds').on('change', function (e) {
+			ModuleNameAsciiId = $(this).find("option:selected").attr('data-id');
+			if (!(',' + listmodule + ',').includes(',' + ModuleNameAsciiId + ',')) {
+				if (listmodule == null || listmodule == "" || listmodule == undefined) {
+					moduleSelectedAll = listmodule + ModuleNameAsciiId;
+					$("#Value_ModuleValues").val(listmodule + ModuleNameAsciiId);
+				} else {
+					moduleSelectedAll = listmodule + "," + ModuleNameAsciiId;
+					$("#Value_ModuleValues").val(listmodule + "," + ModuleNameAsciiId);
+				}
+			} else {
+				moduleSelectedAll = listmodule;
+			}
+			loadAjaxForm('@Url.Action("AjaxGridSelect", "WebsiteModuleContent")?MutilFile=True&ValuesSelected=' + moduleSelectedAll, "#LoadGridModule")
+		});
+		loadAjaxForm('@Url.Action("AjaxGridSelect", "WebsiteModuleContent")?MutilFile=True&ValuesSelected=' + listmodule, "#LoadGridModule")
+
+	});
+</script>

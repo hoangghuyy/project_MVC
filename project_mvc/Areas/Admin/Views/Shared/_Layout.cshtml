@@ -37,10 +37,14 @@
 
 	<!-- script -->
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/ckeditor4/ckeditor.js?v2"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	
 	<!-- Library Bundle Script -->
 	<script src="~/Admin/js/core/libs.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<!-- Load jQuery Mask Plugin -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 	<!-- External Library Bundle Script -->
 	<script src="~/Admin/js/core/external.min.js"></script>
@@ -73,6 +77,8 @@
 	<script src="~/Admin/js/hope-ui.js" defer></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+	<script src="~/ckeditor4/ckeditor.js?v2"></script>
+
 	<script src="~/Admin/js/main.js"></script>
 
 	<style>
@@ -97,32 +103,30 @@
 			@await Component.InvokeAsync("HeadTop")
 			<div class="iq-navbar-header" style="height: 215px">
 				<div class="container-fluid iq-container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="flex-wrap d-flex justify-content-between align-items-center">
-								<div>
-									<h1>Hello Devs!</h1>
-									<p>
-										We are on a mission to help developers like you build successful projects
-										for FREE.
-									</p>
-								</div>
-								<div>
-									<a href="" class="btn btn-link btn-soft-light">
-										<svg class="icon-20"
-											 width="20"
-											 viewBox="0 0 24 24"
-											 fill="none"
-											 xmlns="http://www.w3.org/2000/svg">
-											<path d="M11.8251 15.2171H12.1748C14.0987 15.2171 15.731 13.985 16.3054 12.2764C16.3887 12.0276 16.1979 11.7713 15.9334 11.7713H14.8562C14.5133 11.7713 14.2362 11.4977 14.2362 11.16C14.2362 10.8213 14.5133 10.5467 14.8562 10.5467H15.9005C16.2463 10.5467 16.5263 10.2703 16.5263 9.92875C16.5263 9.58722 16.2463 9.31075 15.9005 9.31075H14.8562C14.5133 9.31075 14.2362 9.03619 14.2362 8.69849C14.2362 8.35984 14.5133 8.08528 14.8562 8.08528H15.9005C16.2463 8.08528 16.5263 7.8088 16.5263 7.46728C16.5263 7.12575 16.2463 6.84928 15.9005 6.84928H14.8562C14.5133 6.84928 14.2362 6.57472 14.2362 6.23606C14.2362 5.89837 14.5133 5.62381 14.8562 5.62381H15.9886C16.2483 5.62381 16.4343 5.3789 16.3645 5.13113C15.8501 3.32401 14.1694 2 12.1748 2H11.8251C9.42172 2 7.47363 3.92287 7.47363 6.29729V10.9198C7.47363 13.2933 9.42172 15.2171 11.8251 15.2171Z"
-												  fill="currentColor"></path>
-											<path opacity="0.4"
-												  d="M19.5313 9.82568C18.9966 9.82568 18.5626 10.2533 18.5626 10.7823C18.5626 14.3554 15.6186 17.2627 12.0005 17.2627C8.38136 17.2627 5.43743 14.3554 5.43743 10.7823C5.43743 10.2533 5.00345 9.82568 4.46872 9.82568C3.93398 9.82568 3.5 10.2533 3.5 10.7823C3.5 15.0873 6.79945 18.6413 11.0318 19.1186V21.0434C11.0318 21.5715 11.4648 22.0001 12.0005 22.0001C12.5352 22.0001 12.9692 21.5715 12.9692 21.0434V19.1186C17.2006 18.6413 20.5 15.0873 20.5 10.7823C20.5 10.2533 20.066 9.82568 19.5313 9.82568Z"
-												  fill="currentColor"></path>
-										</svg>
-										Announcements
-									</a>
-								</div>
+					<div class="col-md-12">
+						<div class="flex-wrap d-flex justify-content-between align-items-center">
+							<div>
+								<h1>Hello Devs!</h1>
+								<p>
+									We are on a mission to help developers like you build successful projects
+									for FREE.
+								</p>
+							</div>
+							<div>
+								<a href="" class="btn btn-link btn-soft-light">
+									<svg class="icon-20"
+										 width="20"
+										 viewBox="0 0 24 24"
+										 fill="none"
+										 xmlns="http://www.w3.org/2000/svg">
+										<path d="M11.8251 15.2171H12.1748C14.0987 15.2171 15.731 13.985 16.3054 12.2764C16.3887 12.0276 16.1979 11.7713 15.9334 11.7713H14.8562C14.5133 11.7713 14.2362 11.4977 14.2362 11.16C14.2362 10.8213 14.5133 10.5467 14.8562 10.5467H15.9005C16.2463 10.5467 16.5263 10.2703 16.5263 9.92875C16.5263 9.58722 16.2463 9.31075 15.9005 9.31075H14.8562C14.5133 9.31075 14.2362 9.03619 14.2362 8.69849C14.2362 8.35984 14.5133 8.08528 14.8562 8.08528H15.9005C16.2463 8.08528 16.5263 7.8088 16.5263 7.46728C16.5263 7.12575 16.2463 6.84928 15.9005 6.84928H14.8562C14.5133 6.84928 14.2362 6.57472 14.2362 6.23606C14.2362 5.89837 14.5133 5.62381 14.8562 5.62381H15.9886C16.2483 5.62381 16.4343 5.3789 16.3645 5.13113C15.8501 3.32401 14.1694 2 12.1748 2H11.8251C9.42172 2 7.47363 3.92287 7.47363 6.29729V10.9198C7.47363 13.2933 9.42172 15.2171 11.8251 15.2171Z"
+											  fill="currentColor"></path>
+										<path opacity="0.4"
+											  d="M19.5313 9.82568C18.9966 9.82568 18.5626 10.2533 18.5626 10.7823C18.5626 14.3554 15.6186 17.2627 12.0005 17.2627C8.38136 17.2627 5.43743 14.3554 5.43743 10.7823C5.43743 10.2533 5.00345 9.82568 4.46872 9.82568C3.93398 9.82568 3.5 10.2533 3.5 10.7823C3.5 15.0873 6.79945 18.6413 11.0318 19.1186V21.0434C11.0318 21.5715 11.4648 22.0001 12.0005 22.0001C12.5352 22.0001 12.9692 21.5715 12.9692 21.0434V19.1186C17.2006 18.6413 20.5 15.0873 20.5 10.7823C20.5 10.2533 20.066 9.82568 19.5313 9.82568Z"
+											  fill="currentColor"></path>
+									</svg>
+									Announcements
+								</a>
 							</div>
 						</div>
 					</div>
@@ -150,19 +154,7 @@
 			</div>
 		</div>
 		@RenderBody()
-		<div class="btn-download">
-			<a class="btn btn-success px-3 py-2"
-			   href="https://iqonic.design/product/admin-templates/hope-ui-admin-free-open-source-bootstrap-admin-template/"
-			   target="_blank">
-				<svg class="icon-24" width="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path opacity="0.4"
-						  d="M17.554 7.29614C20.005 7.29614 22 9.35594 22 11.8876V16.9199C22 19.4453 20.01 21.5 17.564 21.5L6.448 21.5C3.996 21.5 2 19.4412 2 16.9096V11.8773C2 9.35181 3.991 7.29614 6.438 7.29614H7.378L17.554 7.29614Z"
-						  fill="currentColor"></path>
-					<path d="M12.5464 16.0374L15.4554 13.0695C15.7554 12.7627 15.7554 12.2691 15.4534 11.9634C15.1514 11.6587 14.6644 11.6597 14.3644 11.9654L12.7714 13.5905L12.7714 3.2821C12.7714 2.85042 12.4264 2.5 12.0004 2.5C11.5754 2.5 11.2314 2.85042 11.2314 3.2821L11.2314 13.5905L9.63742 11.9654C9.33742 11.6597 8.85043 11.6587 8.54843 11.9634C8.39743 12.1168 8.32142 12.3168 8.32142 12.518C8.32142 12.717 8.39743 12.9171 8.54643 13.0695L11.4554 16.0374C11.6004 16.1847 11.7964 16.268 12.0004 16.268C12.2054 16.268 12.4014 16.1847 12.5464 16.0374Z"
-						  fill="currentColor"></path>
-				</svg>
-			</a>
-		</div>
+		
 		<footer class="footer">
 			<div class="footer-body">
 				<ul class="left-panel list-inline mb-0 p-0">
@@ -196,32 +188,7 @@
 			</div>
 		</footer>
 	</main>
-	<a class="btn btn-fixed-end btn-warning btn-icon btn-setting"
-	   data-bs-toggle="offcanvas"
-	   data-bs-target="#offcanvasExample"
-	   role="button"
-	   aria-controls="offcanvasExample">
-		<svg width="24"
-			 viewBox="0 0 24 24"
-			 class="animated-rotate icon-24"
-			 fill="none"
-			 xmlns="http://www.w3.org/2000/svg">
-			<path fill-rule="evenodd"
-				  clip-rule="evenodd"
-				  d="M20.8064 7.62361L20.184 6.54352C19.6574 5.6296 18.4905 5.31432 17.5753 5.83872V5.83872C17.1397 6.09534 16.6198 6.16815 16.1305 6.04109C15.6411 5.91402 15.2224 5.59752 14.9666 5.16137C14.8021 4.88415 14.7137 4.56839 14.7103 4.24604V4.24604C14.7251 3.72922 14.5302 3.2284 14.1698 2.85767C13.8094 2.48694 13.3143 2.27786 12.7973 2.27808H11.5433C11.0367 2.27807 10.5511 2.47991 10.1938 2.83895C9.83644 3.19798 9.63693 3.68459 9.63937 4.19112V4.19112C9.62435 5.23693 8.77224 6.07681 7.72632 6.0767C7.40397 6.07336 7.08821 5.98494 6.81099 5.82041V5.82041C5.89582 5.29601 4.72887 5.61129 4.20229 6.52522L3.5341 7.62361C3.00817 8.53639 3.31916 9.70261 4.22975 10.2323V10.2323C4.82166 10.574 5.18629 11.2056 5.18629 11.8891C5.18629 12.5725 4.82166 13.2041 4.22975 13.5458V13.5458C3.32031 14.0719 3.00898 15.2353 3.5341 16.1454V16.1454L4.16568 17.2346C4.4124 17.6798 4.82636 18.0083 5.31595 18.1474C5.80554 18.2866 6.3304 18.2249 6.77438 17.976V17.976C7.21084 17.7213 7.73094 17.6516 8.2191 17.7822C8.70725 17.9128 9.12299 18.233 9.37392 18.6717C9.53845 18.9489 9.62686 19.2646 9.63021 19.587V19.587C9.63021 20.6435 10.4867 21.5 11.5433 21.5H12.7973C13.8502 21.5001 14.7053 20.6491 14.7103 19.5962V19.5962C14.7079 19.088 14.9086 18.6 15.2679 18.2407C15.6272 17.8814 16.1152 17.6807 16.6233 17.6831C16.9449 17.6917 17.2594 17.7798 17.5387 17.9394V17.9394C18.4515 18.4653 19.6177 18.1544 20.1474 17.2438V17.2438L20.8064 16.1454C21.0615 15.7075 21.1315 15.186 21.001 14.6964C20.8704 14.2067 20.55 13.7894 20.1108 13.5367V13.5367C19.6715 13.284 19.3511 12.8666 19.2206 12.3769C19.09 11.8873 19.16 11.3658 19.4151 10.928C19.581 10.6383 19.8211 10.3982 20.1108 10.2323V10.2323C21.0159 9.70289 21.3262 8.54349 20.8064 7.63277V7.63277V7.62361Z"
-				  stroke="currentColor"
-				  stroke-width="1.5"
-				  stroke-linecap="round"
-				  stroke-linejoin="round"></path>
-			<circle cx="12.1747"
-					cy="11.8891"
-					r="2.63616"
-					stroke="currentColor"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"></circle>
-		</svg>
-	</a>
+	
 	<!-- Wrapper End-->
 	<!-- offcanvas start -->
 	<div class="offcanvas offcanvas-end"
@@ -396,13 +363,13 @@
 					<h5 class="mb-3 mt-4">Scheme Direction</h5>
 					<div class="d-grid gap-3 grid-cols-2 mb-4">
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/01.png"
+							<img src=""
 								 alt="ltr"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2"
 								 data-setting="dir-mode"
 								 data-name="dir"
 								 data-value="ltr" />
-							<img src="../assets/images/settings/light/01.png"
+							<img src=""
 								 alt="ltr"
 								 class="mode light-img img-fluid btn-border p-0 flex-column active mb-2"
 								 data-setting="dir-mode"
@@ -411,13 +378,13 @@
 							<span class="mt-2"> LTR </span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/02.png"
+							<img src=""
 								 alt=""
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="dir-mode"
 								 data-name="dir"
 								 data-value="rtl" />
-							<img src="../assets/images/settings/light/02.png"
+							<img src=""
 								 alt=""
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="dir-mode"
@@ -457,66 +424,18 @@
 					</div>
 					<hr class="hr-horizontal" />
 					<h5 class="mt-4 mb-3">Sidebar Types</h5>
-					<div class="d-grid gap-3 grid-cols-3 mb-4">
-						<div class="text-center">
-							<img src="../assets/images/settings/dark/03.png"
-								 alt="mini"
-								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-mini" />
-							<img src="../assets/images/settings/light/03.png"
-								 alt="mini"
-								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-mini" />
-							<span class="mt-2">Mini</span>
-						</div>
-						<div class="text-center">
-							<img src="../assets/images/settings/dark/04.png"
-								 alt="hover"
-								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-hover"
-								 data-extra-value="sidebar-mini" />
-							<img src="../assets/images/settings/light/04.png"
-								 alt="hover"
-								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-hover"
-								 data-extra-value="sidebar-mini" />
-							<span class="mt-2">Hover</span>
-						</div>
-						<div class="text-center">
-							<img src="../assets/images/settings/dark/05.png"
-								 alt="boxed"
-								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-boxed" />
-							<img src="../assets/images/settings/light/05.png"
-								 alt="boxed"
-								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
-								 data-setting="sidebar"
-								 data-name="sidebar-type"
-								 data-value="sidebar-boxed" />
-							<span class="mt-2">Boxed</span>
-						</div>
-					</div>
+					
 					<hr class="hr-horizontal" />
 					<h5 class="mt-4 mb-3">Sidebar Active Style</h5>
 					<div class="d-grid gap-3 grid-cols-2 mb-4">
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/06.png"
+							<img src=""
 								 alt="rounded-one-side"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="sidebar"
 								 data-name="sidebar-item"
 								 data-value="navs-rounded" />
-							<img src="../assets/images/settings/light/06.png"
+							<img src=""
 								 alt="rounded-one-side"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="sidebar"
@@ -525,13 +444,13 @@
 							<span class="mt-2">Rounded One Side</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/07.png"
+							<img src=""
 								 alt="rounded-all"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2"
 								 data-setting="sidebar"
 								 data-name="sidebar-item"
 								 data-value="navs-rounded-all" />
-							<img src="../assets/images/settings/light/07.png"
+							<img src=""
 								 alt="rounded-all"
 								 class="mode light-img img-fluid btn-border p-0 flex-column active mb-2"
 								 data-setting="sidebar"
@@ -540,13 +459,13 @@
 							<span class="mt-2">Rounded All</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/08.png"
+							<img src=""
 								 alt="pill-one-side"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="sidebar"
 								 data-name="sidebar-item"
 								 data-value="navs-pill" />
-							<img src="../assets/images/settings/light/09.png"
+							<img src=""
 								 alt="pill-one-side"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="sidebar"
@@ -555,13 +474,13 @@
 							<span class="mt-2">Pill One Side</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/09.png"
+							<img src=""
 								 alt="pill-all"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column"
 								 data-setting="sidebar"
 								 data-name="sidebar-item"
 								 data-value="navs-pill-all" />
-							<img src="../assets/images/settings/light/08.png"
+							<img src=""
 								 alt="pill-all"
 								 class="mode light-img img-fluid btn-border p-0 flex-column"
 								 data-setting="sidebar"
@@ -574,14 +493,14 @@
 					<h5 class="mt-4 mb-3">Navbar Style</h5>
 					<div class="d-grid gap-3 grid-cols-2">
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/11.png"
+							<img src=""
 								 alt="image"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
 								 data-target=".iq-navbar"
 								 data-name="navbar-type"
 								 data-value="nav-glass" />
-							<img src="../assets/images/settings/light/10.png"
+							<img src=""
 								 alt="image"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
@@ -591,14 +510,14 @@
 							<span class="mt-2">Glass</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/10.png"
+							<img src=""
 								 alt="color"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
 								 data-target=".iq-navbar-header"
 								 data-name="navbar-type"
 								 data-value="navs-bg-color" />
-							<img src="../assets/images/settings/light/11.png"
+							<img src=""
 								 alt="color"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
@@ -608,14 +527,14 @@
 							<span class="mt-2">Color</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/12.png"
+							<img src=""
 								 alt="sticky"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
 								 data-target=".iq-navbar"
 								 data-name="navbar-type"
 								 data-value="navs-sticky" />
-							<img src="../assets/images/settings/light/12.png"
+							<img src=""
 								 alt="sticky"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
@@ -625,14 +544,14 @@
 							<span class="mt-2">Sticky</span>
 						</div>
 						<div class="text-center">
-							<img src="../assets/images/settings/dark/13.png"
+							<img src=""
 								 alt="transparent"
 								 class="mode dark-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"
 								 data-target=".iq-navbar"
 								 data-name="navbar-type"
 								 data-value="navs-transparent" />
-							<img src="../assets/images/settings/light/13.png"
+							<img src=""
 								 alt="transparent"
 								 class="mode light-img img-fluid btn-border p-0 flex-column mb-2"
 								 data-setting="navbar"

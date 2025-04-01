@@ -1,0 +1,155 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.TradeMarkViewModel;
+@{
+	Layout = null;
+}
+
+
+<div>
+	<div class="card">
+		<form id="form-action" class="card-header">
+			@if (ViewBag.Action == "Edit")
+			{
+				<input type="hidden" name="Id" value="@Model.Item!.Id" />
+			}
+			<input type="hidden" name="Action" value="@ViewBag.Action" />
+			<div class="header-title">
+				<nav class="d-flex justify-content-end">
+					<nav class="d-flex justify-content-between">
+						<div class="d-flex nav nav-tabs">
+							<button type="submit" class="btn btn-primary nav-link active"
+									style="margin-right:15px">
+								@ViewBag.ActionText
+							</button>
+							<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+						</div>
+					</nav>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div>
+									<div class="row d-flex">
+										<div>
+											<div class="mb-3">
+												<label for="UserName" class="form-label">Tên</label>
+												<input type="text" class="form-control @(ViewBag.Action == "Add" ? "autoPermalink" : "" )" autocomplete="off" id="Name" name="Name"
+													   aria-describedby="" value="@Model.Item!.Name" />
+											</div>
+											<div class="mb-3 d-flex" style="justify-content: space-between">
+												<div class="col-md-6 d-flex" style="align-items:center">
+													<label for="ModuleTypeId" class="form-label col-3">Kiểu hiển thị</label>
+													<select name="ModuleTypeCode" id="ModuleTypeCode" class="form-select mb-3 col-2">
+														<option value="@StaticEnum.Trademark">Manufacturer</option>
+													</select>
+												</div>
+												<div class="mb-3 col-md-4 d-flex me-2" style="align-items:center">
+													<label class="col-md-3" for="add1">Thứ tự</label>
+													<input type="number" class="form-control" id="OrderDisplay" name="OrderDisplay" value="@Model.Item.OrderDisplay" placeholder="Thứ tự" autocomplete="off">
+												</div>
+
+											</div>
+											<div class="d-flex">
+												<label class="col-2">Ảnh đại diện</label>
+												<div class="col-10 changeUrlTinyMceParent">
+													<div class="input-group">
+														<input type="text" style="margin-right: 10px;" class="changeUrlTinyMce form-control form-control-sm link" id="Avatar" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="" />
+														<span class="input-group-addon" style="background:transparent;padding-right:10px;">
+															<button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
+														</span>
+													</div>
+													<div id="AddAvatar">
+														<table class="removeParent text-center">
+															<tbody>
+																<tr>
+																	<td>
+																		<img style="max-width:100px;max-height:100px;" src="@(!string.IsNullOrEmpty(Model.Item.UrlPicture) ? Model.Item.UrlPicture : string.Empty)" ">
+																		<input type="hidden" name="UrlPicture" value="@Model.Item.UrlPicture">
+																		<a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+
+											</div>
+																		@if (ViewBag.Action == "Add")
+																		{
+												<div class="col-sm-3" style="margin-right:20px">
+													<label>Hiển thị</label>
+													<label>
+														<input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Item.IsShow == true) ? "" : "checked") />
+														<input type="hidden" name="IsShow" value="false" />
+													</label>
+												</div>
+																		}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+
+		var form = $("#form-action");
+
+		// Khởi tạo validate
+		form.validate({
+			rules: {
+				Name: {
+					required: true
+				},
+			},
+			messages: {
+				Name: {
+					required: "Tên bắt buộc nhập."
+				},
+			}
+		});
+
+		$('#form-action').submit(function (e) {
+			e.preventDefault();
+
+			if (!form.valid()) {
+				return;
+			}
+
+			var formData = $(this).serialize();
+
+			$.ajax({
+				url: '/AdminCms/TradeMark/Action',
+				type: 'POST',
+				data: formData,
+				success: function (response) {
+					showMessage(response.message, "success");
+					$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+				},
+				error: function (xhr, status, error) {
+					showMessage(error.message, "error");
+				}
+			});
+
+			return false;
+		});
+		$('.btn-back').on("click", function () {
+			loadAjaxForm(urlListItem, "#loadGridView");
+			$('#loadGridView').show();
+			$('#AjaxForm').html('');
+		});
+	});
+
+
+
+</script>
+
+
+
+

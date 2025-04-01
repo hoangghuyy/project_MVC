@@ -1,0 +1,402 @@
+﻿@using project_mvc.Helpers
+@using project_mvc.Services.Admin.Models
+@model project_mvc.Areas.Admin.ViewModels.ModulePositionViewModel
+@{
+	Layout = null;
+	var keyword = ViewBag.Keyword as string;
+
+}
+@if (Model.ListItems != null && Model.ListItems.Any())
+{
+	<div class="table-responsive">
+		<div class="d-flex justify-content-between" style="padding:20px">
+			<form class="d-flex" id="searchFrm">
+				<input class="form-control me-2" type="search" value="@keyword" name="Keyword" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-dark" id="btnSearch" type="submit">Search</button>
+			</form>
+		</div>
+		<table id="basic-table" class="table table-bordered">
+			<thead>
+				<tr role="row">
+					<th class="wd30"></th>
+					<th>Tên vị trí</th>
+					<th>Mã vị trí</th>
+					<th>Thư mục cha</th>
+					<th>Kiểu</th>
+					<th>Thứ tự</th>
+					<th class="text-center wd80">Trạng thái</th>
+					<th>
+						<div class="dropdown">
+							<button class="btn btn-gray dropdown-toggle"
+									type="button"
+									id="dropdownMenuButton"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+									style="line-height: 13px ">
+								Hành động
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<li><a class="deleteAll dropdown-item" href="#">Delete All</a></li>
+							</ul>
+						</div>
+					</th>
+					<th class="text-center wd50">
+						<div class="label-check">
+							<input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+							<label for="checkAll"></label>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.ListItems != null)
+				{
+					var module = new ModulePositionItem();
+
+					foreach (var item in Model.ListItems.Where(x => x.ParentId == 0))
+					{
+						module = Model.ListItems.FirstOrDefault(c => c.Id == item.ParentId);
+						<tr id="item_@(item.Id)">
+							<td style="text-align:center;" class="open-child active" data-id="@item.Id" data-level="1">
+								@if (Model.ListItems.Any(x => x.ParentId == item.Id))
+								{
+									<span class="lnr lnr-enter" data-id="@item.Id"></span>
+								}
+							</td>
+							<td class="open-child" data-id="@item.Id">
+								<a href="#@item.Id" class="edit" data-tab="" title="Sửa">
+									@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+								</a>
+							</td>
+							<td>@item.Code</td>
+							<td>@(module != null ? module.Name : "")</td>
+							<td>@item.TypeView</td>
+							<td style="text-align: center">@item.OrderDisplay</td>
+							<td>
+								<a class="hiddens" href="">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+							</td>
+							<td>
+								<div class="flex align-items-center list-user-action">
+									<div class="btn btn-sm btn-icon btn-warning btn-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-original-title="Edit" data-id="@item.Id">
+										<span class="btn-inner">
+											<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												<path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+											</svg>
+										</span>
+									</div>
+									<div class="btn btn-sm btn-icon btn-danger btn-delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-id="@item.Id">
+										<span class="btn-inner">
+											<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+												<path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												<path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												<path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+											</svg>
+										</span>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="label-check text-center wd50">
+									<input type="checkbox" id="Check@(item.Id)" class="minimal check" value="@item.Id">
+									<label for="Check@(item.Id)"></label>
+								</div>
+							</td>
+						</tr>
+						@foreach (var child in Model.ListItems.Where(x => x.ParentId == item.Id).OrderBy(x => x.OrderDisplay))
+						{
+							module = Model.ListItems.FirstOrDefault(c => c.Id == item.Id);
+							<tr id="item_@(child.Id)" class="child-@item.Id level-1" data-id="@item.Id">
+								<td class="open-child active" data-id="@child.Id" data-level="2" style="text-align:center;">
+									@if (Model.ListItems.Any(x => x.ParentId == child.Id))
+									{
+										<span class="fa fa-minus-square-o collepse" data-id="@child.Id"></span>
+									}
+								</td>
+								<td class="open-child name" data-id="@child.Id" style="padding-left: 50px">
+									<a href="#@child.Id" class="edit" data-tab="" title="Sửa">
+										@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+									</a>
+								</td>
+								<td>@child.Code</td>
+								<td>@(module != null ? module.Name : "")</td>
+								<td>@child.TypeView</td>
+								<td style="text-align: center">@child.OrderDisplay</td>
+								<td>
+									<a class="hiddens" href="">@Html.Raw(StaticEnum.Show(child.IsShow))</a>
+								</td>
+								<td>
+									<div class="flex align-items-center list-user-action">
+										<div class="btn btn-sm btn-icon btn-warning btn-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-original-title="Edit" data-id="@child.Id">
+											<span class="btn-inner">
+												<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													<path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												</svg>
+											</span>
+										</div>
+										<div class="btn btn-sm btn-icon btn-danger btn-delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-id="@child.Id">
+											<span class="btn-inner">
+												<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+													<path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													<path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													<path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+												</svg>
+											</span>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="label-check text-center wd50">
+										<input type="checkbox" id="Check@(child.Id)" class="minimal check" value="@child.Id">
+										<label for="Check@(child.Id)"></label>
+									</div>
+								</td>
+							</tr>
+							@foreach (var child2 in Model.ListItems.Where(x => x.ParentId == child.Id).OrderBy(x => x.OrderDisplay))
+							{
+								module = Model.ListItems.FirstOrDefault(c => c.Id == child.Id);
+								<tr id="item_@(child2.Id)" class="child-@item.Id child-@child.Id level-2" data-id="@child.Id">
+									<td class="open-child active" data-id="@child2.Id" data-level="3">
+										@if (Model.ListItems.Any(x => x.ParentId == child2.Id))
+										{
+											<span class="fa fa-minus-square-o collepse" data-id="@child2.Id"></span>
+										}
+									<td class="open-child name" data-id="@child2.Id" style="padding-left: 100px">
+										<a href="#@child2.Id" class="edit" data-tab="" title="Sửa">
+												@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+										</a>
+									</td>
+									</td>
+									<td class="wd150">@child2.Code</td>
+									<td>@(module != null ? module.Name : "")</td>
+									<td>@child2.TypeView</td>
+									<td style="text-align: center">@child2.OrderDisplay</td>
+									<td>
+										<a class="hiddens" href="">@Html.Raw(StaticEnum.Show(child2.IsShow))</a>
+									</td>
+									<td>
+										<div class="flex align-items-center list-user-action">
+											<div class="btn btn-sm btn-icon btn-warning btn-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-original-title="Edit" data-id="@child2.Id">
+												<span class="btn-inner">
+													<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													</svg>
+												</span>
+											</div>
+											<div class="btn btn-sm btn-icon btn-danger btn-delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-id="@child2.Id">
+												<span class="btn-inner">
+													<svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+														<path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+														<path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+													</svg>
+												</span>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div class="label-check text-center wd50">
+											<input type="checkbox" id="Check@(child2.Id)" class="minimal check" value="@child2.Id">
+											<label for="Check@(child2.Id)"></label>
+										</div>
+									</td>
+								</tr>
+							}
+						}
+					}
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+
+@* @Html.Raw(ViewBag.Pagging) *@
+<style>
+	#basic-table tr td:first-child {
+		font-weight: 700;
+	}
+
+	.level-1 td:nth-child(1) {
+		padding-left: 22px;
+	}
+
+	.level-2 td:nth-child(1) {
+		padding-left: 41px;
+	}
+
+	.level-3 td:nth-child(1) {
+		padding-left: 60px;
+	}
+
+	.level-4 td:nth-child(1) {
+		padding-left: 80px;
+	}
+
+	#basic-table tr.level-1 td:first-child, #basic-table tr.level-2 td:first-child, #basic-table tr.level-3 td:first-child, #basic-table tr.level-4 td:first-child {
+		font-weight: 400
+	}
+
+	#basic-table tr td.active:first-child .badge {
+		display: none;
+	}
+
+	.lnr-chevron-down, .open-child {
+		cursor: pointer;
+		margin-right: 5px;
+	}
+
+	a.show {
+		display: inline-block !important;
+	}
+
+	.hide {
+		display: none;
+	}
+
+	.label-check [type="checkbox"]:not(:checked) + label:before, .label-check [type="checkbox"]:checked + label:before {
+		margin: auto;
+		width: 3em;
+		height: 3em;
+		border: 1px solid #ccc;
+		background: #fff;
+		border-radius: 2px;
+		box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+	}
+
+	.label-check [type="checkbox"]:not(:checked) + label:after {
+		opacity: 0;
+		transform: scale(0);
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		font-size: 1.3em;
+		line-height: 0.8;
+		color: #03A9F4;
+		transition: all .2s;
+		font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;
+	}
+
+</style>
+<script>
+	$(() => {
+		$('.btn-delete').on("click", function (e) {
+			e.preventDefault();
+			const id = $(this).data("id");
+
+			$.confirm({
+				content: 'Bạn có chắc muốn xóa không?',
+				buttons: {
+					confirm: {
+						text: 'Xóa',
+						btnClass: 'btn-red',
+						action: function () {
+							$.ajax({
+								url: urlAction,
+								type: "POST",
+								contentType: "application/x-www-form-urlencoded",
+								data: { action: "Delete", Id: id },
+								success: function (data) {
+									loadAjaxForm(urlListItem, "#loadGridView");
+									showMessage(data.message, "success");
+								},
+								error: function () {
+									showMessage(data.message, "error");
+								}
+							});
+						}
+					},
+					cancel: {
+						text: 'Hủy',
+						action: function () { }
+					}
+				}
+			});
+		});
+		$('.deleteAll').on("click", function (e) {
+			e.preventDefault();
+			var arrRowId = '';
+			$("input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+				arrRowId += $(this).val() + ",";
+			});
+			arrRowId = (arrRowId.length > 0) ? arrRowId.substring(0, arrRowId.length - 1) : arrRowId;
+			if (arrRowId != "") {
+				$.confirm({
+					title: false,
+					content: 'Bạn có chắc muốn xóa các mục đã chọn không?',
+					buttons: {
+						confirm: {
+							text: 'Xóa',
+							btnClass: 'btn-red',
+							action: function () {
+								$.ajax({
+									url: urlAction,
+									type: "POST",
+									contentType: "application/x-www-form-urlencoded",
+									data: { action: "DeleteAll", ItemId: arrRowId }, //Gửi dữ liệu qua body
+									success: function (data) {
+										loadAjaxForm(urlListItem, "#loadGridView");
+										showMessage(data.message, "success");
+									},
+									error: function () {
+										showMessage("Xóa thất bại", "error");
+									}
+								});
+							}
+						},
+						cancel: {
+							text: 'Hủy',
+							action: function () { }
+						}
+					}
+				});
+			} else {
+				showMessage("Hãy chọn ít nhất 1 bài viết", "success");;
+			}
+
+			return false;
+		});
+		$('.btn-edit').on("click", function () {
+			const id = $(this).data("id");
+			loadAjaxForm(urlForm + "?id=" + id, "#AjaxForm");
+			$('#loadGridView').html('');
+			$('#AjaxForm').show();
+		});
+		// $('.open-child .lnr-chevron-down').on('click', function () {
+		// 	let parent = $(this).parents('.open-child')
+		// 	let id = parent.data('id');
+		// 	if (parent.hasClass('active')) {
+		// 		$('.child-' + id).addClass('hide');
+		// 		$('.child-' + id + '.open-child').removeClass('active');
+		// 		parent.removeClass('active');
+		// 	}
+		// 	else {
+		// 		let lvel = parent.data('level');
+		// 		$('.child-' + id + '.level-' + lvel).removeClass('hide');
+		// 		parent.addClass('active');
+		// 	}
+
+		// })
+		loadFunctionInit();
+		$('#searchFrm').submit(function () {
+			let val = $('input[name="Keyword"]').val()
+			$.post(urlListItem + "?Keyword=" + val, function (data) {
+				$('#loadGridView').html(data);
+				setTimeout(
+					function () {
+						paging();
+					}, 300);
+			}).fail(function () {
+				$('#loadGridView').html("Tải dữ liệu thất bại...");
+			});
+			return false;
+		})
+
+
+	});
+</script>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using project_mvc.Helpers;
+using System.Reflection;
 
 namespace project_mvc.Areas.Admin.Controllers
 {
@@ -51,7 +52,7 @@ namespace project_mvc.Areas.Admin.Controllers
 					"<div class=\"pagi\"><ul>" +
 					"<li>Trang [Current]/[Total]</li>" +
 					"<li class='[disabledPrevious]'><a href='[LinkDoublePrevious]' class='pagingData'>&laquo;</a></li>" +
-					"<li class='[disabledPrevious]'><a href='[LinkPrevious]' class='pagingData'>&lsaquo;</a></li>[LinkNumber]" +
+					"<li class='[disabledPrevious]'><a class='pagingData'>&lsaquo;</a></li>[LinkNumber]" +
 					"<li class='[disabledNext]'><a href='[LinkNext]' class='pagingData'>&rsaquo;</a></li>" +
 					"<li class='[disabledNext]'><a href='[LinkDoubleNext]' class='pagingData'>&raquo;</a></li>" +
 					"</ul></div>";
@@ -83,10 +84,10 @@ namespace project_mvc.Areas.Admin.Controllers
 				{
 					doubleNext = (totalRecord / rowPerPage) + 1;
 				}
-				html = html.Replace("[LinkPrevious]", "#page=" + (currentPage - 1));
-				html = html.Replace("[LinkNext]", "#page=" + (currentPage + 1));
-				html = html.Replace("[LinkDoublePrevious]", "#page=1");
-				html = html.Replace("[LinkDoubleNext]", "#page=" + doubleNext);
+				html = html.Replace("[LinkPrevious]", (currentPage - 1).ToString());
+				html = html.Replace("[LinkNext]", (currentPage + 1).ToString());
+				html = html.Replace("[LinkDoublePrevious]", "1");
+				html = html.Replace("[LinkDoubleNext]", doubleNext.ToString());
 				string link = string.Empty;
 				int begin = 1;
 				int end = 9;
@@ -110,7 +111,7 @@ namespace project_mvc.Areas.Admin.Controllers
 				}
 				for (int i = begin; i <= end; i++)
 				{
-					link += " <li " + (i == currentPage ? "class=\"active\"" : "") + "><a class=\"pagingData\" href=\"#page=" + i + "\">" + i + "</a></li>";
+					link += " <li " + (i == currentPage ? "class=\"active\"" : "") + "><a class=\"pagingData\" href=\"" + i + "\">" + i + "</a></li>";
 				}
 				html = html.Replace("[Total]", end.ToString());
 				html = html.Replace("[LinkNumber]", link);
@@ -204,5 +205,84 @@ namespace project_mvc.Areas.Admin.Controllers
 
 		}
 		#endregion
+		public List<T> UpdateModelLst<T>(T obj, List<T> objList, int length = 0, int i = 0) where T : new()
+		{
+			try
+			{
+				obj = new T();
+				PropertyInfo[] properties = obj.GetType().GetProperties();
+				foreach (PropertyInfo item in properties)
+				{
+					try
+					{
+						Type type = item.PropertyType;
+						type = Nullable.GetUnderlyingType(type) ?? type;
+						if (type != typeof(string) && type != typeof(int) && type != typeof(bool) && type != typeof(DateTime) && type != typeof(double) && type != typeof(decimal) && type != typeof(Nullable))
+							continue;
+						var values = Request.Form[item.Name];
+						var objValue = string.Empty;
+						int a = 1;
+						foreach (var value in values)
+						{
+							if (string.IsNullOrEmpty(value))
+							{
+								objValue += a == 1 ? " " : ", ";
+							}
+							else
+							{
+								objValue += a == 1 ? value : "," + value;
+							}
+							a++;
+						}
+						if (!string.IsNullOrEmpty(objValue))
+						{
+							List<string> vals = Utility.StringToListString(objValue);
+							length = vals.Count;
+							if (type == typeof(double))
+							{
+								item.SetValue(obj, ConvertUtil.ToDouble(vals[i]));
+							}
+							else if (type == typeof(int))
+							{
+								item.SetValue(obj, ConvertUtil.ToInt32(vals[i]));
+							}
+							else if (type == typeof(bool))
+							{
+								item.SetValue(obj, ConvertUtil.ToBool(vals[i]));
+							}
+							else if (type == typeof(DateTime))
+							{
+								item.SetValue(obj, ConvertUtil.ToDateTime(vals[i]));
+							}
+							else if (type == typeof(decimal))
+							{
+								item.SetValue(obj, ConvertUtil.ToDecimal(vals[i]));
+							}
+							else
+							{
+								item.SetValue(obj, vals[i].Replace("|", ","));
+							}
+
+						}
+					}
+					catch
+					{
+					}
+				}
+
+				if (i < length)
+				{
+					objList.Add(obj);
+					i++;
+					return UpdateModelLst(obj, objList, length, i);
+				}
+			}
+			catch
+			{
+
+			}
+			return objList;
+
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using project_mvc.Helpers
+@{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutLogin.cshtml";
 }
 
@@ -120,7 +121,20 @@
                     required: "Mật khẩu bắt buộc nhập."
                 }
             },
+            submitHandler: function () {
+                debugger
+                let formData = form.serialize();
+                $.ajax({
+                    "url": "/Admincms/Public/LoginAction",
+                    "method": "POST",
+                    "data": formData
+                }).done(function (response) {
+                    if (response.url != null) {
+                        window.location.href = response.url;
+                    }
+                });
+                return false;
+            }
         })
-
     })
 </script>

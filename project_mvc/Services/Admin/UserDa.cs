@@ -15,18 +15,16 @@ namespace project_mvc.Services.Admin
 		{
 			try
 			{
-				using SqlConnection connect = DapperDA.GetOpenConnection();
-				page = page > 1 ? page : 1;
-				rowPage = rowPage > 1 ? rowPage : 10;
-				int start = (page - 1) * rowPage;
-				var paras = new DynamicParameters();
-				paras.AddDynamicParams(new
-				{
-					search.Keyword,
-					start,
-					@size = rowPage
-				});
-				var result = await connect.QueryAsync<UserAdminItem>("dbo.AdminUserListSearch", paras, commandType: CommandType.StoredProcedure);
+                using SqlConnection connect = DapperDA.GetOpenConnection();
+                int start = (page - 1) * rowPage;
+                var paras = new DynamicParameters();
+                paras.AddDynamicParams(new
+                {
+                    search.Keyword,
+                    start,
+                    @size = rowPage
+                });
+                var result = await connect.QueryAsync<UserAdminItem>("dbo.AdminUserListSearch", paras, commandType: CommandType.StoredProcedure);
 				await connect.CloseAsync();
 				return [.. result];
 			}
@@ -42,7 +40,7 @@ namespace project_mvc.Services.Admin
             try
             {
                 using SqlConnection connect = DapperDA.GetOpenConnection();
-                var result = await connect.QueryAsync<UserAdmins>("SELECT * FROM UserAdmins WHERE IsDeleted = 0 AND ID=@id", new { id });
+                var result = await connect.QueryAsync<UserAdmins>("SELECT * FROM UserAdmins WHERE IsDeleted = 0 AND Id=@id", new { id });
                 await connect.CloseAsync();
                 return result?.FirstOrDefault();
             }
@@ -69,6 +67,21 @@ namespace project_mvc.Services.Admin
             }
 
         }
-		
+		[Obsolete]
+		public async Task<UserAdmins?> GetByUserName(string user)
+		{
+			try
+			{
+				using SqlConnection connect = DapperDA.GetOpenConnection();
+				var result = await connect.QueryAsync<UserAdmins>("SELECT * FROM UserAdmins WHERE IsDeleted = 0 AND UserName=@user", new { user });
+				await connect.CloseAsync();
+				return result?.FirstOrDefault();
+			}
+			catch
+			{
+				return null;
+			}
+
+		}
 	}
 }

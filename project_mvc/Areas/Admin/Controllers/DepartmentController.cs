@@ -28,13 +28,15 @@ namespace project_mvc.Areas.Admin.Controllers
 		{
 			SearchModel search = new();
 			await TryUpdateModelAsync(search);
+			search.Keyword = Utility.ValidString(search.Keyword!, "", true);
 			int pageSize = 1;
 			DepartmentViewModel model = new()
 			{
 				ListItems = await DepartmentDa.ListSearch(search, search.Page, pageSize, false)
 			};
-			//int total = model.ListItems != null && model.ListItems.Count != 0 ? model.ListItems.FirstOrDefault()!.TotalRecords : 0;
-			//ViewBag.Pagging = GetPage(search.Page, total, pageSize);
+			int total = model.ListItems != null && model.ListItems.Count != 0 ? model.ListItems.FirstOrDefault()!.TotalRecords : 0;
+			ViewBag.Pagging = GetPage(search.Page, total, pageSize);
+			ViewBag.Keyword = search.Keyword;
 			return View(model);
 		}
 
@@ -74,13 +76,13 @@ namespace project_mvc.Areas.Admin.Controllers
 				{
 					case StaticEnum.Add:
 						{
-							if (string.IsNullOrEmpty(obj.DepartmentName))
+							if (string.IsNullOrEmpty(obj.Name))
 							{
 								msg.Message = "Tên phòng ban không được để trống";
 								return Ok(msg);
 							}
 							
-							bool check = await DepartmentDa.CheckDepartment(obj.DepartmentName);
+							bool check = await DepartmentDa.CheckDepartment(obj.Name);
 							if (check)
 							{
 								msg.Message = "Tên phòng ban đã tồn tại";
@@ -105,12 +107,12 @@ namespace project_mvc.Areas.Admin.Controllers
 								msg.Message = "Không tìm thấy dữ liệu";
 								return Ok(msg);
 							}
-							if (string.IsNullOrEmpty(obj.DepartmentName))
+							if (string.IsNullOrEmpty(obj.Name))
 							{
 								msg.Message = "Tên phòng ban không được để trống";
 								return Ok(msg);
 							}
-							objOld.DepartmentName = obj.DepartmentName;
+							objOld.Name = obj.Name;
 
 							int rs = await BaseDa.Update(objOld, "Departments");
 							if (rs > 0)

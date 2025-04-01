@@ -1,0 +1,324 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.AdvertisingViewModel;
+@{
+	Layout = null;
+}
+
+
+<div>
+	<div class="card">
+		<form id="form-action" class="card-header">
+			@if (ViewBag.Action == "Edit")
+			{
+				<input type="hidden" name="Id" value="@Model.Item.Id" />
+			}
+			<input type="hidden" name="Action" value="@ViewBag.Action" />
+			<div class="header-title">
+				<nav class="d-flex justify-content-between">
+					<div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+						<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Overview</button>
+						<button class="nav-link" id="nav-module-tab" data-bs-toggle="tab" data-bs-target="#nav-module" type="button" role="tab" aria-controls="nav-module" aria-selected="false">Danh mục</button>
+
+					</div>
+					<div class="d-flex nav nav-tabs">
+						<button type="submit" class="btn btn-primary nav-link active"
+								style="margin-right:15px">
+							@ViewBag.ActionText
+						</button>
+						<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="card-body">
+							<div class="new-user-info">
+								<div>
+									<div class="row">
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="fname">Tiêu đề</label>
+											<input type="text" class="form-control" id="Name" name="Name" value="@Model.Item.Name">
+										</div>
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="lname">Tiêu đề khác</label>
+											<input type="text" class="form-control" id="Title" name="Title" value="@Model.Item.Title">
+										</div>
+										<div class="form-group d-flex" style="align-items:center">
+											<label class="col-2" for="add1">Link url</label>
+											<input type="text" class="form-control" id="LinkUrl" name="LinkUrl" value="@Model.Item.LinkUrl">
+										</div>
+										<div class="form-group d-flex col-sm-12">
+											<div class="col-sm-2">
+												<label>Vị trí hiển thị</label>
+											</div>
+											<div class="col-sm-3" style="margin-right:69px">
+												<input type="text" class="form-control form-control-sm" name="PositionCode" id="PositionCode" value="@Model.Item.PositionCode" />
+											</div>
+											<div class="col-sm-1">
+												<label>Ảnh</label>
+											</div>
+											<div class="col-sm-5 changeUrlTinyMceParent">
+												<div class="input-group">
+													<span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+														<button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+													</span>
+													<input type="text" class="changeUrlTinyMce form-control form-control-sm link" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.Item.UrlPicture" />
+												</div>
+												<div id="AddAvatar">
+													@if (Model.Item.UrlPicture != null)
+													{
+														<table class="removeParent">
+															<tr>
+																<td>
+																	<img style="max-width:100px;max-height:100px;" src="@Model.Item.UrlPicture">
+																	<input type="hidden" name="UrlPicture" value="@Model.Item.UrlPicture">
+																	<a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+																</td>
+															</tr>
+														</table>
+													}
+												</div>
+											</div>
+										</div>
+										<div class="form-group d-flex col-sm-12">
+											<div class="col-sm-1">
+												<label>Module</label>
+											</div>
+											<div class="col-sm-4">
+												<input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="" />
+												<button id="SelectModule" type="button" class="primaryAction btn btn-info btn-sm" style="float: left;margin-right: 10px;">Chọn module</button>
+												<div id="Text_ModuleValues" class="checkBoxValues"></div>
+											</div>
+											<div class="col-sm-2">
+												<label>Ảnh Mobile/Icon</label>
+											</div>
+											<div class="col-sm-5 changeUrlTinyMceParent">
+												<div class="input-group">
+													<span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+														<button type="button" onclick="SelectFileTyniMce('AddAvatarMB','UrlPictureMobile',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+													</span>
+													<input type="text" class="changeUrlTinyMce form-control form-control-sm link" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatarMB', 'UrlPictureMobile',0)" style="margin:0;" value="@Model.Item.UrlPictureMobile" />
+												</div>
+												<div id="AddAvatarMB">
+													@if (Model.Item.UrlPictureMobile != null)
+													{
+														<table class="removeParent">
+															<tr>
+																<td>
+																	<img style="max-width:100px;max-height:100px;" src="@Model.Item.UrlPictureMobile">
+																	<input type="hidden" name="UrlPictureMobile" value="@Model.Item.UrlPictureMobile">
+																	<a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+																</td>
+															</tr>
+														</table>
+													}
+
+												</div>
+											</div>
+										</div>
+										<div class="form-group d-flex col-sm-12">
+											<div class="col-sm-1">
+												<label>Thứ tự</label>
+											</div>
+											<div class="col-sm-1">
+												<input class="form-control form-control-sm text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="" placeholder="" />
+											</div>
+											@if (ViewBag.Action == "Add")
+											{
+												<div class="col-sm-3" style="margin-right:69px">
+													<label>Hiển thị</label>
+													<label>
+														<input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Item.IsShow == true) ? "" : "checked") />
+														<input type="hidden" name="IsShow" value="true" />
+													</label>
+												</div>
+											}
+											<div class="col-sm-2">
+												<label>Video / File</label>
+											</div>
+											<div class="col-sm-5">
+												<div class="input-group">
+													<span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+														<button type="button" onclick="SelectFileTyniMce('Video','Video',2);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn file</button>
+													</span>
+													<input type="text" class="form-control form-control-sm link" id="Video" name="Video" placeholder="Link video" style="margin:0;" value="@Model.Item.Video" />
+												</div>
+												<span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
+											</div>
+										</div>
+										<div class="form-group d-flex col-sm-12">
+											<div class="col-sm-1">
+												<label>Mô tả</label>
+											</div>
+											<div class="col-sm-11">
+												<textarea rows="10" id="Description" name="Description" class="form-control textarea" value="value=" @Model.Item.Description""></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-module" role="tabpanel" aria-labelledby="nav-module-tab">
+						<div class="card-body">
+							<div class="row">
+								<div class="">
+									<div class="form-group" style="display: none">
+										<div class="col-sm-2">
+											<label>Danh mục đã chọn</label>
+										</div>
+										<div class="col-sm-10">
+											<input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@Model.Item.ModuleIds" />
+											<div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600;">
+												@string.Join(",", Model.ListModulePosition!.Select(c => c.Name))
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-12">
+											<div id="LoadGridModulePosition"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		LoadCKEDITOR('Description', true, 200);
+
+		var form = $("#form-action");
+
+		// Khởi tạo validate
+		form.validate({
+			rules: {
+				Name: {
+					required: true
+				},
+				
+			},
+			messages: {
+				Name: {
+					required: "Tên Module bắt buộc nhập."
+				},
+				
+			}
+		});
+
+		$('#form-action').submit(function (e) {
+			e.preventDefault();
+
+			if (!form.valid()) {
+				return;
+			}
+
+			var formData = $(this).serialize();
+			updateEditor();
+
+			$.ajax({
+				url: '/AdminCms/Advertising/Action',
+				type: 'POST',
+				data: formData,
+				success: function (response) {
+					showMessage(response.message, "success");
+					$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+				},
+				error: function (xhr, status, error) {
+					showMessage(error.message, "error");
+				}
+			});
+
+
+
+			return false;
+		});
+
+		$('.btn-back').on("click", function () {
+			loadAjaxForm(urlListItem, "#loadGridView");
+			$('#loadGridView').show();
+			$('#AjaxForm').html('');
+		});
+
+
+		// let ModuleNameAsciiId = '';
+		// let moduleSelectedAll = '';
+		// let listmodule = replaceCommaFirstEnd($("#Value_ModuleValues").val());
+		// $('#ModuleNameAsciiIds').on('change', function (e) {
+		// 	debugger
+		// 	ModuleNameAsciiId = $(this).find("option:selected").attr('data-id');
+		// 	if (!(',' + listmodule + ',').includes(',' + ModuleNameAsciiId + ',')) {
+		// 		if (listmodule == null || listmodule == "" || listmodule == undefined) {
+		// 			moduleSelectedAll = listmodule + ModuleNameAsciiId;
+		// 			$("#Value_ModuleValues").val(listmodule + ModuleNameAsciiId);
+		// 		} else {
+		// 			moduleSelectedAll = listmodule + "," + ModuleNameAsciiId;
+		// 			$("#Value_ModuleValues").val(listmodule + "," + ModuleNameAsciiId);
+		// 		}
+		// 	} else {
+		// 		moduleSelectedAll = listmodule;
+		// 	}
+		// 	loadAjaxForm('@Url.Action("AjaxGridPosition", "Advertising")?MutilFile=True&ValuesSelected=' + moduleSelectedAll, "#LoadGridModulePosition", function () {
+		// 		initializeModuleCheckboxEvents();
+		// 	});
+		// });
+		// loadAjaxForm('@Url.Action("AjaxGridPosition", "Advertising")?MutilFile=True&ValuesSelected=' + listmodule, "#LoadGridModulePosition")
+
+	});
+
+	let ModuleNameAsciiId = '';
+	let moduleSelectedAll = '';
+
+	$(document).ready(function () {
+		// Khởi tạo giá trị ban đầu
+		let listmodule = replaceCommaFirstEnd($("#Value_ModuleValues").val());
+
+		// Load grid lần đầu
+		loadGridModulePosition(listmodule);
+
+		// Xử lý sự kiện change dropdown
+		$('#ModuleNameAsciiIds').on('change', function (e) {
+			ModuleNameAsciiId = $(this).find("option:selected").attr('data-id');
+
+			if (!(',' + listmodule + ',').includes(',' + ModuleNameAsciiId + ',')) {
+				if (!listmodule) {
+					moduleSelectedAll = ModuleNameAsciiId;
+				} else {
+					moduleSelectedAll = listmodule + "," + ModuleNameAsciiId;
+				}
+				$("#Value_ModuleValues").val(moduleSelectedAll);
+			} else {
+				moduleSelectedAll = listmodule;
+			}
+
+			loadGridModulePosition(moduleSelectedAll);
+		});
+	});
+
+	function loadGridModulePosition(selectedValues) {
+		loadAjaxForm('@Url.Action("AjaxGridPosition", "Advertising")?MutilFile=True&ValuesSelected=' + selectedValues,
+			"#LoadGridModulePosition",
+			function () {
+				if (typeof initializeModuleCheckboxEvents === 'function') {
+					initializeModuleCheckboxEvents();
+				}
+			}
+		);
+	}
+
+	function replaceCommaFirstEnd(str) {
+		if (!str) return '';
+		str = str.toString();
+		if (str.startsWith(',')) str = str.substring(1);
+		if (str.endsWith(',')) str = str.substring(0, str.length - 1);
+		return str;
+	}
+
+
+
+</script>
+

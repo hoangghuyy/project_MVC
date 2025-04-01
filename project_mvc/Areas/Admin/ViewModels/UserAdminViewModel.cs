@@ -8,7 +8,8 @@ namespace project_mvc.Areas.Admin.ViewModels
 		public List<UserAdminItem>? ListItems { get; set; }
 		public UserAdmins? Item { get; set; }
 		public List<Departments>? ListDepartment { get; set; }
-
+		public int Total { get; set; }
+		public int PageSize { get; set; }
 
 	}
 }

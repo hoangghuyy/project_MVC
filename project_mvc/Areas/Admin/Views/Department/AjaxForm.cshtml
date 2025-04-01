@@ -34,8 +34,8 @@
 										<div class="row d-flex">
 											<div class="mb-3">
 												<label for="UserName" class="form-label">Tên phòng ban</label>
-												<input type="text" class="form-control" id="DepartmentName" name="DepartmentName"
-													   aria-describedby="" value="@Model.Item.DepartmentName" />
+												<input type="text" class="form-control" id="Name" name="Name"
+													   aria-describedby="" value="@Model.Item.Name" />
 											</div>
 											<div class="mb-3">
 												<label class="col-3" for="add1">Thứ tự</label>
@@ -53,7 +53,6 @@
 	</div>
 	<script>
 		$(document).ready(function () {
-			handleAction();
 
 			var form = $("#form-action");
 
@@ -94,6 +93,11 @@
 				});
 
 				return false;
+			});
+			$('.btn-back').on("click", function () {
+				loadAjaxForm(urlListItem, "#loadGridView");
+				$('#loadGridView').show();
+				$('#AjaxForm').html('');
 			});
 		});
 

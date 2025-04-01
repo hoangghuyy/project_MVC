@@ -5,11 +5,16 @@ using project_mvc.Areas.Admin.Models;
 
 namespace project_mvc.Dappers
 {
-	public class DapperDA(string conection)
+	public class DapperDA
 	{
-		private readonly string _connectionString = conection;
+        private readonly string _connectionString = "";
 
-		[Obsolete]
+        public DapperDA(string conection)
+        {
+            _connectionString = conection;
+        }
+
+        [Obsolete]
 		public SqlConnection GetOpenConnection()
 		{
 			SqlConnection connection = new(_connectionString);
@@ -164,6 +169,19 @@ namespace project_mvc.Dappers
 			}
 
 			return propertyContainer;
+		}
+		public IEnumerable<T> Select<T>(string sql)
+		{
+			return GetItems<T>(CommandType.Text, sql);
+		}
+		private IEnumerable<T> GetItems<T>(CommandType commandType, string sql)
+		{
+			using (var connection = GetOpenConnection())
+			{
+				var result = connection.Query<T>(sql, commandType: commandType);
+				connection.Close();
+				return result;
+			}
 		}
 	}
 }

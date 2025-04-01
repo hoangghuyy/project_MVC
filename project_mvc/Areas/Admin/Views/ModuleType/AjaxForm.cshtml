@@ -1,0 +1,130 @@
+﻿@using project_mvc.Helpers
+@model project_mvc.Areas.Admin.ViewModels.ModuleTypeViewModel;
+@{
+	Layout = null;
+}
+
+@if (Model.Item != null)
+{
+	<div>
+		<div class="card">
+			<form id="form-action" class="card-header">
+				@if (ViewBag.Action == "Edit")
+				{
+					<input type="hidden" name="Id" value="@Model.Item.Id" />
+				}
+				<input type="hidden" name="Action" value="@ViewBag.Action" />
+				<div class="header-title">
+					
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+							<div class="card-body">
+								<div class="new-user-info">
+									<div>
+										<div class="row d-flex">
+											<div class="mb-3">
+												<label for="Name" class="form-label">Tên </label>
+												<input type="text" class="form-control" id="Name" name="Name"
+													   aria-describedby="" value="@Model.Item.Name" />
+											</div>
+											<div class="mb-3">
+												<label for="Name" class="form-label">Mã </label>
+												<input type="text" class="form-control" id="Code" name="Code"
+													   aria-describedby="" value="@Model.Item.Code" />
+											</div>
+										</div>
+										<div class="d-flex" style="align-items:center">
+											<div class="d-flex mb-3" style="margin-right:20px; align-items:center">
+												<label class="col-3" for="add1">Thứ tự</label>
+												<input type="number" class="form-control" name="OrderDisplay" placeholder="Link url">
+											</div>
+											
+											@if (ViewBag.Action == "Add")
+											{
+												<div class="col-sm-3" style="margin-right:69px">
+													<label>Hiển thị</label>
+													<label>
+														<input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Item.IsShow == false) ? "" : "checked") />
+														<input type="hidden" name="IsShow" value="false" />
+													</label>
+												</div>
+											}
+										</div>
+									</div>
+								</div>
+							</div>
+							<nav class="d-flex justify-content-end">
+								<nav class="d-flex justify-content-between">
+									<div class="d-flex nav nav-tabs">
+										<button type="submit" class="btn btn-primary nav-link active"
+												style="margin-right:15px">
+											@ViewBag.ActionText
+										</button>
+										<div type="button" class="btn btn-outline-primary nav-link btn-back">Quay lại</div>
+									</div>
+								</nav>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function () {
+
+			var form = $("#form-action");
+
+			// Khởi tạo validate
+			form.validate({
+				rules: {
+					Name: {
+						required: true
+					},
+				},
+				messages: {
+					Name: {
+						required: "Tên bắt buộc nhập."
+					},
+				}
+			});
+
+			$('#form-action').submit(function (e) {
+				e.preventDefault();
+
+				if (!form.valid()) {
+					return;
+				}
+
+				var formData = $(this).serialize();
+
+				$.ajax({
+					url: '/AdminCms/ModuleType/Action',
+					type: 'POST',
+					data: formData,
+					success: function (response) {
+						showMessage(response.message, "success");
+						$('.btn-back').trigger('click'); // Chỉ back khi submit thành công
+					},
+					error: function (xhr, status, error) {
+						showMessage(error.message, "error");
+					}
+				});
+
+				return false;
+			});
+			$('.btn-back').on("click", function () {
+				loadAjaxForm(urlListItem, "#loadGridView");
+				$('#loadGridView').show();
+				$('#AjaxForm').html('');
+			});
+		});
+
+
+
+	</script>
+}
+
+
+
+

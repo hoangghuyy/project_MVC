@@ -13,7 +13,8 @@ namespace project_mvc.Helpers
             Request = context.Request;
             Response = context.Response;
             string? path = Request.Path.Value;
-            bool user = true;
+            SessionBase session = new(context);
+            bool user = !string.IsNullOrEmpty(session.GetAdminUserId());
 
             if (!user)
             {
