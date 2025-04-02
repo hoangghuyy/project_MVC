@@ -11,19 +11,45 @@
     const goToLogin = document.getElementById('go-to-login');
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
+    const accountDropdown = document.getElementById('account-dropdown');
+    const logoutBtn = document.getElementById('logout-btn');
+    const dropdownUsername = document.getElementById('dropdown-username');
+    const dropdownEmail = document.getElementById('dropdown-email');
 
     // Toggle popups
     accountIcon.addEventListener('click', function (e) {
         e.preventDefault();
 
-        // If user is logged in, do nothing or show profile options
-        if (welcomeText.style.display === 'block') return;
+        // Nếu đã đăng nhập, hiển thị dropdown thông tin tài khoản
+        if (isLoggedIn()) {
+            if (accountDropdown.style.display === 'block') {
+                accountDropdown.style.display = 'none';
+            } else {
+                accountDropdown.style.display = 'block';
+                hideAllPopups();
+            }
+            return;
+        }
 
-        // Show login popup by default
+        // Nếu chưa đăng nhập, hiển thị popup đăng nhập
         if (!loginPopup.style.display || loginPopup.style.display === 'none') {
             hideAllPopups();
             loginPopup.style.display = 'block';
         } else {
+            hideAllPopups();
+        }
+    });
+
+    // Đăng xuất
+    logoutBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        logout();
+    });
+
+    // Click ra ngoài để đóng dropdown
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.account') && !e.target.closest('.account-popup')) {
+            accountDropdown.style.display = 'none';
             hideAllPopups();
         }
     });
@@ -52,28 +78,18 @@
     // Login form submission
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
-
-        // Get form values
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-
-        // Here you would typically make an AJAX call to your backend
-        // For demo purposes, we'll simulate a successful login
         simulateLogin(email);
     });
 
     // Register form submission
     registerForm.addEventListener('submit', function (e) {
         e.preventDefault();
-
-        // Get form values
         const name = document.getElementById('register-name').value;
         const phone = document.getElementById('register-phone').value;
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
-
-        // Here you would typically make an AJAX call to your backend
-        // For demo purposes, we'll simulate a successful registration
         hideAllPopups();
         successMessage.style.display = 'block';
     });
@@ -87,26 +103,42 @@
 
     // Simulate successful login
     function simulateLogin(email) {
-        // Hide account text and show welcome text
         accountText.style.display = 'none';
         welcomeText.style.display = 'block';
         welcomeText.textContent = 'Xin chào, ' + email.split('@')[0];
 
-        // Hide the popup
-        hideAllPopups();
+        dropdownUsername.textContent = email.split('@')[0];
+        dropdownEmail.textContent = email;
 
-        // In a real app, you would store the login state
+        hideAllPopups();
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', email);
     }
 
+    // Logout function
+    function logout() {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        accountDropdown.style.display = 'none';
+        welcomeText.style.display = 'none';
+        accountText.style.display = 'block';
+        hideAllPopups();
+    }
+
+    // Check login status
+    function isLoggedIn() {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    }
+
     // Check if user is already logged in (for page reloads)
     function checkLoginStatus() {
-        if (localStorage.getItem('isLoggedIn') === 'true') {
+        if (isLoggedIn()) {
             const email = localStorage.getItem('userEmail');
             accountText.style.display = 'none';
             welcomeText.style.display = 'block';
             welcomeText.textContent = 'Xin chào, ' + email.split('@')[0];
+            dropdownUsername.textContent = email.split('@')[0];
+            dropdownEmail.textContent = email;
         }
     }
 

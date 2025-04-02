@@ -75,7 +75,17 @@
 							<span id="account-text">Account</span>
 							<span id="welcome-text" style="display:none"></span>
 						</div>
-
+						<div id="account-dropdown" class="account-popup" style="display:none">
+							<div class="popup-content">
+								<div class="user-info">
+									<span id="dropdown-username"></span>
+									<span id="dropdown-email"></span>
+								</div>
+								<div class="dropdown-actions">
+									<a href="#" id="logout-btn">Đăng xuất</a>
+								</div>
+							</div>
+						</div>
 						<!-- Login Popup -->
 						<div id="login-popup" class="account-popup" style="display:none">
 							<div class="popup-content">
@@ -567,8 +577,45 @@
 			margin: 15px 0;
 			color: #333;
 		}
+	/* Dropdown khi đã đăng nhập */
+	#account-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		width: 200px;
+		background: white;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		z-index: 1000;
+		border-radius: 4px;
+		padding: 10px;
+	}
 
+		#account-dropdown .user-info {
+			padding: 10px;
+			border-bottom: 1px solid #eee;
+		}
+
+			#account-dropdown .user-info span {
+				display: block;
+				margin-bottom: 5px;
+			}
+
+		#account-dropdown .dropdown-actions {
+			padding: 10px;
+		}
+
+			#account-dropdown .dropdown-actions a {
+				display: block;
+				color: #333;
+				text-decoration: none;
+				padding: 5px 0;
+			}
+
+				#account-dropdown .dropdown-actions a:hover {
+					color: #0066cc;
+				}
 </style>
+
 <script src="~/html/style/assests/js/account_popup.js"></script>
 
 
